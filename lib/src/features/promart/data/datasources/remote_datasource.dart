@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:promart/src/features/promart/data/data.dart';
+import 'package:logger/logger.dart';
 
 import 'dart:convert';
 
@@ -69,14 +70,24 @@ class RemoteDataSource implements IRemoteDataSource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  final logger = Logger(
+    printer: PrettyPrinter(
+        methodCount: 1,
+        lineLength: 50,
+        errorMethodCount: 3,
+        colors: true,
+        printEmojis: true),
+  );
+
   /// Firebase Authentication
+  @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
 
   @override
   Future<bool> isSignedIn() async {
-    final currentUser = await _firebaseAuth.currentUser;
+    final currentUser = _firebaseAuth.currentUser;
     return currentUser != null;
   }
 
@@ -96,7 +107,7 @@ class RemoteDataSource implements IRemoteDataSource {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
-    User user = await _firebaseAuth.currentUser!;
+    User user = _firebaseAuth.currentUser!;
     return user.uid;
   }
 
@@ -116,7 +127,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return 'Invalid email';
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
     return null;
   }
@@ -134,7 +145,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return 'Account already exists for that email.';
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
   }
 
@@ -149,7 +160,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return 'No user found for this email';
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
     return null;
   }
@@ -171,7 +182,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return 'Invalid reset code';
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
     return null;
   }
@@ -189,16 +200,15 @@ class RemoteDataSource implements IRemoteDataSource {
         return 'There was an internal erorr. Try again later!';
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
   }
 
   @override
   Future<User?> getCurrentUser() async {
-    User? user = await _firebaseAuth.currentUser;
+    User? user = _firebaseAuth.currentUser;
     return user;
   }
-
 
   /// Fakestore API
   @override
@@ -225,6 +235,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return AddCartModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -256,6 +267,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return DeleteCartModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -287,6 +299,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return SingleUserModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -319,6 +332,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return AllCartModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -350,6 +364,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return AllCategoryModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -384,6 +399,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return AllProductModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -415,6 +431,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return AllUserModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -449,6 +466,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return AllProductModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -480,6 +498,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return SingleCartModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -512,6 +531,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return SingleProductModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -543,6 +563,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return SingleUserModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -574,6 +595,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return AllCartModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -607,6 +629,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return LoginTokenModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -639,6 +662,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return SingleUserModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
@@ -671,6 +695,7 @@ class RemoteDataSource implements IRemoteDataSource {
         return SingleUserModel.fromJson(encodedResponse);
       } else {}
     } catch (e) {
+      logger.e(e);
       if (e is DioError) {
         throw Exception;
         //TODO: Add Dio Exception error Logger
