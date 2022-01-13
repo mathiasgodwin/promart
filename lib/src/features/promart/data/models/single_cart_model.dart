@@ -2,9 +2,13 @@
 //
 //     final singleCartModel = singleCartModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class SingleCartModel {
+import 'package:equatable/equatable.dart';
+
+class SingleCartModel extends Equatable {
   SingleCartModel({
     required this.data,
   });
@@ -23,9 +27,12 @@ class SingleCartModel {
   Map<String, dynamic> toMap() => {
         "data": data.toMap(),
       };
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class SingleCartData {
+class SingleCartData extends Equatable {
   SingleCartData({
     required this.id,
     required this.userId,
@@ -40,7 +47,8 @@ class SingleCartData {
   final List<SingleCartProduct> products;
   final int v;
 
-  factory SingleCartData.fromJson(String str) => SingleCartData.fromMap(json.decode(str));
+  factory SingleCartData.fromJson(String str) =>
+      SingleCartData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -48,8 +56,8 @@ class SingleCartData {
         id: json["id"],
         userId: json["userId"],
         date: DateTime.parse(json["date"]),
-        products:
-            List<SingleCartProduct>.from(json["products"].map((x) => SingleCartProduct.fromMap(x))),
+        products: List<SingleCartProduct>.from(
+            json["products"].map((x) => SingleCartProduct.fromMap(x))),
         v: json["__v"],
       );
 
@@ -60,9 +68,13 @@ class SingleCartData {
         "products": List<dynamic>.from(products.map((x) => x.toMap())),
         "__v": v,
       };
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id, userId, date, products, v];
 }
 
-class SingleCartProduct {
+class SingleCartProduct extends Equatable {
   SingleCartProduct({
     required this.productId,
     required this.quantity,
@@ -71,11 +83,13 @@ class SingleCartProduct {
   final int productId;
   final int quantity;
 
-  factory SingleCartProduct.fromJson(String str) => SingleCartProduct.fromMap(json.decode(str));
+  factory SingleCartProduct.fromJson(String str) =>
+      SingleCartProduct.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory SingleCartProduct.fromMap(Map<String, dynamic> json) => SingleCartProduct(
+  factory SingleCartProduct.fromMap(Map<String, dynamic> json) =>
+      SingleCartProduct(
         productId: json["productId"],
         quantity: json["quantity"],
       );
@@ -84,4 +98,7 @@ class SingleCartProduct {
         "productId": productId,
         "quantity": quantity,
       };
+
+  @override
+  List<Object?> get props => [productId, quantity];
 }

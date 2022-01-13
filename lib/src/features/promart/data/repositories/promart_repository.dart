@@ -1,5 +1,6 @@
 import 'package:errors/errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:promart/src/features/promart/data/data.dart';
 import 'package:promart/src/features/promart/domain/domain.dart';
 
@@ -7,12 +8,18 @@ class PromartRepository implements IPromartRepository {
   PromartRepository({required IRemoteDataSource dataSource})
       : _dataSource = dataSource;
 
-
-  
-  IRemoteDataSource _dataSource;
+  final Logger logger = Logger(
+    printer: PrettyPrinter(
+        methodCount: 1,
+        lineLength: 50,
+        errorMethodCount: 3,
+        colors: true,
+        printEmojis: true),
+  );
+  final IRemoteDataSource _dataSource;
 
   /// Firebase Authentication
-   @override
+  @override
   Future<void> signOut() async {
     try {
       await _dataSource.signOut();
@@ -24,14 +31,10 @@ class PromartRepository implements IPromartRepository {
   @override
   Future<String?> anonymousSignIn() async {
     try {
-      // if (await _networkManager.isConnected) {
       final response = await _dataSource.anonymousSignIn();
       return response;
-      // } else {
-      // throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
@@ -40,15 +43,11 @@ class PromartRepository implements IPromartRepository {
   Future<String?> confirmPasswordRecovery(
       {String? code, String? newPassword}) async {
     try {
-      // if (await _networkManager.isConnected) {
       final response = await _dataSource.confirmPasswordRecovery(
           code: code, newPassword: newPassword);
       return response;
-      // } else {
-      // throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
@@ -56,15 +55,11 @@ class PromartRepository implements IPromartRepository {
   @override
   Future<String?> emailSignIn({String? email, String? password}) async {
     try {
-      // if (await _networkManager.isConnected) {
-      final response = await _dataSource.emailSignIn(
-          email: email, password: password);
+      final response =
+          await _dataSource.emailSignIn(email: email, password: password);
       return response;
-      // } else {
-      //   throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
@@ -72,15 +67,11 @@ class PromartRepository implements IPromartRepository {
   @override
   Future<String?> emailSignUp({String? email, String? password}) async {
     try {
-      // if (await _networkManager.isConnected) {
-      final response = await _dataSource.emailSignUp(
-          email: email, password: password);
+      final response =
+          await _dataSource.emailSignUp(email: email, password: password);
       return response;
-      // } else {
-      // throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
@@ -88,13 +79,9 @@ class PromartRepository implements IPromartRepository {
   @override
   Future<String?> googleSignIn() async {
     try {
-      // if (await _networkManager.isConnected) {
       await _dataSource.googleSignIn();
-      // } else {
-      // throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
@@ -102,14 +89,10 @@ class PromartRepository implements IPromartRepository {
   @override
   Future<bool?> isSignedIn() async {
     try {
-      // if (await _networkManager.isConnected) {
       final response = await _dataSource.isSignedIn();
       return response;
-      // } else {
-      // throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
@@ -120,7 +103,7 @@ class PromartRepository implements IPromartRepository {
       final response = _dataSource.onAuthChange();
       return response;
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw CacheException();
     }
   }
@@ -128,15 +111,10 @@ class PromartRepository implements IPromartRepository {
   @override
   Future<String?> passwordRecovery({String? email}) async {
     try {
-      // if (await _networkManager.isConnected) {
-      final response =
-          await _dataSource.passwordRecovery(email: email);
+      final response = await _dataSource.passwordRecovery(email: email);
       return response;
-      // } else {
-      // throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
@@ -144,21 +122,17 @@ class PromartRepository implements IPromartRepository {
   @override
   Future<User?> getCurrentUser() async {
     try {
-      // if (await _networkManager.isConnected) {
       final user = await _dataSource.getCurrentUser();
       return user;
-      // } else {
-      // throw ServerFailure();
-      // }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw ServerException();
     }
   }
 
   /// Fakestore API
   @override
-  Future<AddCartModel?> addCart({required AddCart carts}) async {
+  Future<AddCartModel?> addCart({required AddCartModel carts}) async {
     try {
       final response = await _dataSource.addCart(carts: carts);
       return response;
@@ -296,7 +270,7 @@ class PromartRepository implements IPromartRepository {
   }
 
   @override
-  Future<SingleUserModel?> registerUser({required UserEntity user}) async {
+  Future<SingleUserModel?> registerUser({required SingleUserModel user}) async {
     try {
       final response = await _dataSource.registerUser(user: user);
       return response;
@@ -306,7 +280,7 @@ class PromartRepository implements IPromartRepository {
   }
 
   @override
-  Future<SingleUserModel?> updateUser({required UserEntity user}) async {
+  Future<SingleUserModel?> updateUser({required SingleUserModel user}) async {
     try {
       final response = await _dataSource.updateUser(user: user);
       return response;

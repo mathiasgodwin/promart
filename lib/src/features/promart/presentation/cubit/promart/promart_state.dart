@@ -1,5 +1,6 @@
 part of 'promart_cubit.dart';
 
+
 abstract class PromartState extends Equatable {
   const PromartState();
 

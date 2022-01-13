@@ -2,12 +2,17 @@
 //
 //     final singleCartModel = singleCartModelFromMap(jsonString);
 
+// ignore_for_file: must_be_immutable, prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class AddCartModel {
+import 'package:equatable/equatable.dart';
+import 'package:promart/src/features/promart/domain/entities/add_cart_entity.dart';
+
+class AddCartModel extends AddCartEntity {
   AddCartModel({
     required this.data,
-  });
+  }) : super(userId: data.userId, product: data.products, date: data.date);
 
   final AddCartData data;
 
@@ -25,7 +30,7 @@ class AddCartModel {
       };
 }
 
-class AddCartData {
+class AddCartData extends Equatable {
   AddCartData({
     required this.id,
     required this.userId,
@@ -61,9 +66,12 @@ class AddCartData {
         "products": List<dynamic>.from(products.map((x) => x.toMap())),
         "__v": v,
       };
+
+  @override
+  List<Object?> get props => [id, userId, date, products, v];
 }
 
-class AddCartProduct {
+class AddCartProduct extends Equatable {
   AddCartProduct({
     required this.productId,
     required this.quantity,
@@ -77,8 +85,7 @@ class AddCartProduct {
 
   String toJson() => json.encode(toMap());
 
-  factory AddCartProduct.fromMap(Map<String, dynamic> json) =>
-      AddCartProduct(
+  factory AddCartProduct.fromMap(Map<String, dynamic> json) => AddCartProduct(
         productId: json["productId"],
         quantity: json["quantity"],
       );
@@ -87,4 +94,7 @@ class AddCartProduct {
         "productId": productId,
         "quantity": quantity,
       };
+
+  @override
+  List<Object?> get props => [productId, quantity];
 }

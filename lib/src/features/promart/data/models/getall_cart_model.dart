@@ -2,9 +2,13 @@
 //
 //     final allCartModel = allCartModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class AllCartModel {
+import 'package:equatable/equatable.dart';
+
+class AllCartModel extends Equatable {
   AllCartModel({
     required this.data,
   });
@@ -24,9 +28,12 @@ class AllCartModel {
   Map<String, dynamic> toMap() => {
         "data": List<dynamic>.from(data.map((x) => x.toMap())),
       };
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class AllCartData {
+class AllCartData extends Equatable {
   AllCartData({
     required this.id,
     required this.userId,
@@ -62,9 +69,18 @@ class AllCartData {
         "products": List<dynamic>.from(products.map((x) => x.toMap())),
         "__v": v,
       };
+
+  @override
+  List<Object?> get props => [
+        id,
+        userId,
+        date,
+        products,
+        v,
+      ];
 }
 
-class AllCartProduct {
+class AllCartProduct extends Equatable {
   AllCartProduct({
     required this.productId,
     required this.quantity,
@@ -87,4 +103,10 @@ class AllCartProduct {
         "productId": productId,
         "quantity": quantity,
       };
+
+  @override
+  List<Object?> get props => [
+        productId,
+        quantity,
+      ];
 }

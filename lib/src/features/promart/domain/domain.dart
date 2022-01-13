@@ -1,11 +1,9 @@
 // Export Entities
-// TODO: Export entities
 export 'entities/add_cart_entity.dart';
 export 'entities/user_entity.dart';
 
 // Export Repositories
 export 'repositories/ipromart_repository.dart';
-
 
 // Export Use Cases
 export 'usecases/add_cart_usecase.dart';

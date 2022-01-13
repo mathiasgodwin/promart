@@ -2,9 +2,13 @@
 //
 //     final allProductModel = allProductModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class AllProductModel {
+import 'package:equatable/equatable.dart';
+
+class AllProductModel extends Equatable {
   AllProductModel({
     required this.data,
   });
@@ -17,15 +21,19 @@ class AllProductModel {
   String toJson() => json.encode(toMap());
 
   factory AllProductModel.fromMap(Map<String, dynamic> json) => AllProductModel(
-        data: List<AllProductData>.from(json["data"].map((x) => AllProductData.fromMap(x))),
+        data: List<AllProductData>.from(
+            json["data"].map((x) => AllProductData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
         "data": List<dynamic>.from(data.map((x) => x.toMap())),
       };
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class AllProductData {
+class AllProductData extends Equatable {
   AllProductData({
     required this.id,
     required this.title,
@@ -44,7 +52,8 @@ class AllProductData {
   final String image;
   final AllProductRating rating;
 
-  factory AllProductData.fromJson(String str) => AllProductData.fromMap(json.decode(str));
+  factory AllProductData.fromJson(String str) =>
+      AllProductData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -67,9 +76,13 @@ class AllProductData {
         "image": image,
         "rating": rating.toMap(),
       };
+
+  @override
+  List<Object?> get props =>
+      [id, title, price, description, category, image, rating];
 }
 
-class AllProductRating {
+class AllProductRating extends Equatable {
   AllProductRating({
     required this.rate,
     required this.count,
@@ -78,11 +91,13 @@ class AllProductRating {
   final double rate;
   final int count;
 
-  factory AllProductRating.fromJson(String str) => AllProductRating.fromMap(json.decode(str));
+  factory AllProductRating.fromJson(String str) =>
+      AllProductRating.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory AllProductRating.fromMap(Map<String, dynamic> json) => AllProductRating(
+  factory AllProductRating.fromMap(Map<String, dynamic> json) =>
+      AllProductRating(
         rate: json["rate"].toDouble(),
         count: json["count"],
       );
@@ -91,4 +106,7 @@ class AllProductRating {
         "rate": rate,
         "count": count,
       };
+
+  @override
+  List<Object?> get props => [rate, count];
 }

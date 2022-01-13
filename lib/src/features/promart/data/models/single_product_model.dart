@@ -2,9 +2,13 @@
 //
 //     final singleProductModel = singleProductModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class SingleProductModel {
+import 'package:equatable/equatable.dart';
+
+class SingleProductModel extends Equatable {
   SingleProductModel({
     required this.data,
   });
@@ -24,9 +28,12 @@ class SingleProductModel {
   Map<String, dynamic> toMap() => {
         "data": data.toMap(),
       };
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class SingleProductData {
+class SingleProductData extends Equatable {
   SingleProductData({
     required this.id,
     required this.title,
@@ -45,11 +52,13 @@ class SingleProductData {
   final String image;
   final SingleProductRating rating;
 
-  factory SingleProductData.fromJson(String str) => SingleProductData.fromMap(json.decode(str));
+  factory SingleProductData.fromJson(String str) =>
+      SingleProductData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory SingleProductData.fromMap(Map<String, dynamic> json) => SingleProductData(
+  factory SingleProductData.fromMap(Map<String, dynamic> json) =>
+      SingleProductData(
         id: json["id"],
         title: json["title"],
         price: json["price"].toDouble(),
@@ -68,9 +77,21 @@ class SingleProductData {
         "image": image,
         "rating": rating.toMap(),
       };
+
+  @override
+  
+  List<Object?> get props => [
+        id,
+        title,
+        price,
+        description,
+        category,
+        image,
+        rating,
+      ];
 }
 
-class SingleProductRating {
+class SingleProductRating extends Equatable {
   SingleProductRating({
     required this.rate,
     required this.count,
@@ -79,11 +100,13 @@ class SingleProductRating {
   final double rate;
   final int count;
 
-  factory SingleProductRating.fromJson(String str) => SingleProductRating.fromMap(json.decode(str));
+  factory SingleProductRating.fromJson(String str) =>
+      SingleProductRating.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory SingleProductRating.fromMap(Map<String, dynamic> json) => SingleProductRating(
+  factory SingleProductRating.fromMap(Map<String, dynamic> json) =>
+      SingleProductRating(
         rate: json["rate"].toDouble(),
         count: json["count"],
       );
@@ -92,4 +115,7 @@ class SingleProductRating {
         "rate": rate,
         "count": count,
       };
+
+  @override
+  List<Object?> get props => [rate, count];
 }

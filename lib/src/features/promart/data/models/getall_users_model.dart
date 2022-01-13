@@ -2,9 +2,13 @@
 //
 //     final allUserModel = allUserModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class AllUserModel {
+import 'package:equatable/equatable.dart';
+
+class AllUserModel extends Equatable {
   AllUserModel({
     required this.data,
   });
@@ -17,15 +21,19 @@ class AllUserModel {
   String toJson() => json.encode(toMap());
 
   factory AllUserModel.fromMap(Map<String, dynamic> json) => AllUserModel(
-        data: List<AllUserData>.from(json["data"].map((x) => AllUserData.fromMap(x))),
+        data: List<AllUserData>.from(
+            json["data"].map((x) => AllUserData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
         "data": List<dynamic>.from(data.map((x) => x.toMap())),
       };
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class AllUserData {
+class AllUserData extends Equatable {
   AllUserData({
     required this.address,
     required this.id,
@@ -46,7 +54,8 @@ class AllUserData {
   final String phone;
   final int v;
 
-  factory AllUserData.fromJson(String str) => AllUserData.fromMap(json.decode(str));
+  factory AllUserData.fromJson(String str) =>
+      AllUserData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -71,9 +80,22 @@ class AllUserData {
         "phone": phone,
         "__v": v,
       };
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [
+        address,
+        id,
+        email,
+        username,
+        password,
+        name,
+        phone,
+        v,
+      ];
 }
 
-class AllUserAddress {
+class AllUserAddress extends Equatable {
   AllUserAddress({
     required this.geolocation,
     required this.city,
@@ -88,7 +110,8 @@ class AllUserAddress {
   final int number;
   final String zipcode;
 
-  factory AllUserAddress.fromJson(String str) => AllUserAddress.fromMap(json.decode(str));
+  factory AllUserAddress.fromJson(String str) =>
+      AllUserAddress.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -107,9 +130,18 @@ class AllUserAddress {
         "number": number,
         "zipcode": zipcode,
       };
+
+  @override
+  List<Object?> get props => [
+        geolocation,
+        city,
+        street,
+        number,
+        zipcode,
+      ];
 }
 
-class AllUserGeolocation {
+class AllUserGeolocation extends Equatable {
   AllUserGeolocation({
     required this.lat,
     required this.long,
@@ -123,7 +155,8 @@ class AllUserGeolocation {
 
   String toJson() => json.encode(toMap());
 
-  factory AllUserGeolocation.fromMap(Map<String, dynamic> json) => AllUserGeolocation(
+  factory AllUserGeolocation.fromMap(Map<String, dynamic> json) =>
+      AllUserGeolocation(
         lat: json["lat"],
         long: json["long"],
       );
@@ -132,9 +165,12 @@ class AllUserGeolocation {
         "lat": lat,
         "long": long,
       };
+
+  @override
+  List<Object?> get props => [lat, long];
 }
 
-class AllUserName {
+class AllUserName extends Equatable {
   AllUserName({
     required this.firstname,
     required this.lastname,
@@ -143,7 +179,8 @@ class AllUserName {
   final String firstname;
   final String lastname;
 
-  factory AllUserName.fromJson(String str) => AllUserName.fromMap(json.decode(str));
+  factory AllUserName.fromJson(String str) =>
+      AllUserName.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -156,4 +193,10 @@ class AllUserName {
         "firstname": firstname,
         "lastname": lastname,
       };
+
+  @override
+  List<Object?> get props => [
+        firstname,
+        lastname,
+      ];
 }

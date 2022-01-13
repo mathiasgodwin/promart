@@ -4,7 +4,9 @@
 
 import 'dart:convert';
 
-class AllCategoryModel {
+import 'package:equatable/equatable.dart';
+
+class AllCategoryModel extends Equatable {
   AllCategoryModel({
     required this.data,
   });
@@ -24,4 +26,7 @@ class AllCategoryModel {
   Map<String, dynamic> toMap() => {
         "data": List<dynamic>.from(data.map((x) => x)),
       };
+
+  @override
+  List<Object?> get props => [data];
 }

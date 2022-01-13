@@ -1,37 +1,19 @@
-import 'dart:convert';
+// ignore_for_file: must_be_immutable
 
-class AddCart {
-  AddCart({
-    required String userId,
-    required String date,
-    required List<Map<String, int>> product,
+import 'package:equatable/equatable.dart';
+import 'package:promart/src/features/promart/data/models/add_cart_model.dart';
+
+class AddCartEntity extends Equatable {
+  AddCartEntity({
+    required int userId,
+    required DateTime date,
+    required List<AddCartProduct> product,
   });
 
-  String? userId;
-  String? date;
-  List<Map<String, int>>? product;
+  int? userId;
+  DateTime? date;
+  List<AddCartProduct>? product;
 
-  factory AddCart.fromJson(String str) {
-    return AddCart.fromMap(json.decode(str));
-  }
-
-  factory AddCart.fromMap(Map<String, dynamic> json) {
-    return AddCart(
-      userId: json['userId'],
-      date: json['date'],
-      product: json['product'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'date': date,
-      'product': product,
-    };
-  }
-
-  String toJson() {
-    return json.encode(toMap());
-  }
+  @override
+  List<Object?> get props => [userId, date, product];
 }

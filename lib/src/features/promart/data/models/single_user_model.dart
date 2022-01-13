@@ -2,12 +2,29 @@
 //
 //     final singleUserModel = singleUserModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class SingleUserModel {
+import 'package:equatable/equatable.dart';
+import 'package:promart/src/features/promart/domain/entities/user_entity.dart';
+
+class SingleUserModel extends UserEnity {
   SingleUserModel({
     required this.data,
-  });
+  }) : super(
+          city: data.address.city,
+          phone: data.phone,
+          email: data.email,
+          street: data.address.street,
+          firstname: data.name.firstname,
+          lastname: data.name.lastname,
+          username: data.username,
+          number: data.phone,
+          long: data.address.geolocation.long,
+          lat: data.address.geolocation.lat,
+          password: data.password,
+        );
 
   final SingleUserData data;
 
@@ -23,9 +40,11 @@ class SingleUserModel {
   Map<String, dynamic> toMap() => {
         "data": data.toMap(),
       };
+
+      
 }
 
-class SingleUserData {
+class SingleUserData extends Equatable {
   SingleUserData({
     required this.address,
     required this.id,
@@ -46,7 +65,8 @@ class SingleUserData {
   final String phone;
   final int v;
 
-  factory SingleUserData.fromJson(String str) => SingleUserData.fromMap(json.decode(str));
+  factory SingleUserData.fromJson(String str) =>
+      SingleUserData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -71,9 +91,13 @@ class SingleUserData {
         "phone": phone,
         "__v": v,
       };
+
+  @override
+  List<Object?> get props =>
+      [address, id, email, username, password, name, phone, v];
 }
 
-class SingleUserAddress {
+class SingleUserAddress extends Equatable {
   SingleUserAddress({
     required this.geolocation,
     required this.city,
@@ -88,11 +112,13 @@ class SingleUserAddress {
   final int number;
   final String zipcode;
 
-  factory SingleUserAddress.fromJson(String str) => SingleUserAddress.fromMap(json.decode(str));
+  factory SingleUserAddress.fromJson(String str) =>
+      SingleUserAddress.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory SingleUserAddress.fromMap(Map<String, dynamic> json) => SingleUserAddress(
+  factory SingleUserAddress.fromMap(Map<String, dynamic> json) =>
+      SingleUserAddress(
         geolocation: SingleUserGeolocation.fromMap(json["geolocation"]),
         city: json["city"],
         street: json["street"],
@@ -107,9 +133,18 @@ class SingleUserAddress {
         "number": number,
         "zipcode": zipcode,
       };
+
+  @override
+  List<Object?> get props => [
+        geolocation,
+        city,
+        street,
+        number,
+        zipcode,
+      ];
 }
 
-class SingleUserGeolocation {
+class SingleUserGeolocation extends Equatable {
   SingleUserGeolocation({
     required this.lat,
     required this.long,
@@ -123,7 +158,8 @@ class SingleUserGeolocation {
 
   String toJson() => json.encode(toMap());
 
-  factory SingleUserGeolocation.fromMap(Map<String, dynamic> json) => SingleUserGeolocation(
+  factory SingleUserGeolocation.fromMap(Map<String, dynamic> json) =>
+      SingleUserGeolocation(
         lat: json["lat"],
         long: json["long"],
       );
@@ -132,9 +168,12 @@ class SingleUserGeolocation {
         "lat": lat,
         "long": long,
       };
+
+  @override
+  List<Object?> get props => [lat, long];
 }
 
-class SingleUserName {
+class SingleUserName extends Equatable {
   SingleUserName({
     required this.firstname,
     required this.lastname,
@@ -143,7 +182,8 @@ class SingleUserName {
   final String firstname;
   final String lastname;
 
-  factory SingleUserName.fromJson(String str) => SingleUserName.fromMap(json.decode(str));
+  factory SingleUserName.fromJson(String str) =>
+      SingleUserName.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -156,4 +196,10 @@ class SingleUserName {
         "firstname": firstname,
         "lastname": lastname,
       };
+
+  @override
+  List<Object?> get props => [
+        lastname,
+        firstname,
+      ];
 }

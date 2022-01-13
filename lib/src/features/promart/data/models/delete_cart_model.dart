@@ -2,9 +2,13 @@
 //
 //     final singleCartModel = singleCartModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class DeleteCartModel {
+import 'package:equatable/equatable.dart';
+
+class DeleteCartModel extends Equatable {
   DeleteCartModel({
     required this.data,
   });
@@ -23,9 +27,12 @@ class DeleteCartModel {
   Map<String, dynamic> toMap() => {
         "data": data.toMap(),
       };
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class DeleteCartData {
+class DeleteCartData extends Equatable {
   DeleteCartData({
     required this.id,
     required this.userId,
@@ -61,9 +68,12 @@ class DeleteCartData {
         "products": List<dynamic>.from(products.map((x) => x.toMap())),
         "__v": v,
       };
+
+  @override
+  List<Object?> get props => [id, userId, date, products, v];
 }
 
-class DeleteCartProduct {
+class DeleteCartProduct extends Equatable {
   DeleteCartProduct({
     required this.productId,
     required this.quantity,
@@ -87,4 +97,10 @@ class DeleteCartProduct {
         "productId": productId,
         "quantity": quantity,
       };
+
+  @override
+  List<Object?> get props => [
+        productId,
+        quantity,
+      ];
 }

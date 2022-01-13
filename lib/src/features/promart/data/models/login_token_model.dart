@@ -2,9 +2,13 @@
 //
 //     final loginTokenModel = loginTokenModelFromMap(jsonString);
 
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
-class LoginTokenModel {
+import 'package:equatable/equatable.dart';
+
+class LoginTokenModel extends Equatable {
   LoginTokenModel({
     required this.data,
   });
@@ -23,9 +27,12 @@ class LoginTokenModel {
   Map<String, dynamic> toMap() => {
         "data": data.toMap(),
       };
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class LoginData {
+class LoginData extends Equatable {
   LoginData({
     required this.token,
   });
@@ -43,4 +50,7 @@ class LoginData {
   Map<String, dynamic> toMap() => {
         "token": token,
       };
+
+  @override
+  List<Object?> get props => [token];
 }

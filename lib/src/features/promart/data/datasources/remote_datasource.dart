@@ -55,12 +55,12 @@ abstract class IRemoteDataSource {
   Future<LoginTokenModel?> loginUser(
       {required String password, required String username});
 
-  Future<AddCartModel?> addCart({required AddCart carts});
+  Future<AddCartModel?> addCart({required AddCartModel carts});
 
   //
-  Future<SingleUserModel?> registerUser({required UserEntity user});
+  Future<SingleUserModel?> registerUser({required SingleUserModel user});
 
-  Future<SingleUserModel?> updateUser({required UserEntity user});
+  Future<SingleUserModel?> updateUser({required SingleUserModel user});
 
   Future<SingleUserModel?> deleteUser({required String userId});
 }
@@ -212,7 +212,7 @@ class RemoteDataSource implements IRemoteDataSource {
 
   /// Fakestore API
   @override
-  Future<AddCartModel?> addCart({required AddCart carts}) async {
+  Future<AddCartModel?> addCart({required AddCartModel carts}) async {
     try {
       final response = await _client.fetch(
         RequestOptions(
@@ -639,7 +639,7 @@ class RemoteDataSource implements IRemoteDataSource {
   }
 
   @override
-  Future<SingleUserModel?> registerUser({required UserEntity user}) async {
+  Future<SingleUserModel?> registerUser({required SingleUserModel user}) async {
     try {
       final response = await _client.fetch(
         RequestOptions(
@@ -672,7 +672,7 @@ class RemoteDataSource implements IRemoteDataSource {
   }
 
   @override
-  Future<SingleUserModel?> updateUser({required UserEntity user}) async {
+  Future<SingleUserModel?> updateUser({required SingleUserModel user}) async {
     try {
       final response = await _client.fetch(
         RequestOptions(
