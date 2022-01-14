@@ -11,7 +11,6 @@ abstract class IPromartRepository {
   Future<String?> emailSignUp({String? email, String? password});
   Future<String?> passwordRecovery({String? email});
   Future<String?> confirmPasswordRecovery({String? code, String? newPassword});
-  Future<String?> anonymousSignIn();
   Future<User?> getCurrentUser();
 
   /// Fakestore API

@@ -28,16 +28,7 @@ class PromartRepository implements IPromartRepository {
     }
   }
 
-  @override
-  Future<String?> anonymousSignIn() async {
-    try {
-      final response = await _dataSource.anonymousSignIn();
-      return response;
-    } catch (e) {
-      logger.e(e);
-      throw ServerException();
-    }
-  }
+  
 
   @override
   Future<String?> confirmPasswordRecovery(

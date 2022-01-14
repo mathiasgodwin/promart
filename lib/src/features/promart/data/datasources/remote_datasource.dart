@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:promart/src/core/utils/models/google_auth.dart';
 import 'package:promart/src/features/promart/data/data.dart';
 import 'package:logger/logger.dart';
 
 import 'dart:convert';
-
-import 'package:promart/src/features/promart/domain/domain.dart';
 
 abstract class IRemoteDataSource {
   /// Firebase Authentication
@@ -26,7 +25,6 @@ abstract class IRemoteDataSource {
 
   Future<String?> confirmPasswordRecovery({String? code, String? newPassword});
 
-  Future<String?> anonymousSignIn();
 
   Future<User?> getCurrentUser();
 
@@ -99,16 +97,24 @@ class RemoteDataSource implements IRemoteDataSource {
   @override
   Future<String?> googleSignIn() async {
     await _googleSignIn.signOut();
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser!.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    await _firebaseAuth.signInWithCredential(credential);
-    User user = _firebaseAuth.currentUser!;
-    return user.uid;
+
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await _firebaseAuth.signInWithCredential(credential);
+      User user = _firebaseAuth.currentUser!;
+      return user.uid;
+    } on FirebaseAuthException catch (e) {
+      logger.e(e.stackTrace);
+      throw LogInWithGoogleFailure.fromCode(e.code);
+    } catch (e) {
+      throw const LogInWithGoogleFailure();
+    }
   }
 
   @override
@@ -119,17 +125,11 @@ class RemoteDataSource implements IRemoteDataSource {
       // return userCredential;
       return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        return 'No user found for this email';
-      } else if (e.code == 'wrong-password') {
-        return 'Wrong password';
-      } else if (e.code == 'invalid-email') {
-        return 'Invalid email';
-      }
+      logger.e(e.stackTrace);
+      throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (e) {
-      logger.e(e);
+      throw const LogInWithEmailAndPasswordFailure();
     }
-    return null;
   }
 
   @override
@@ -139,13 +139,10 @@ class RemoteDataSource implements IRemoteDataSource {
           .createUserWithEmailAndPassword(email: email!, password: password!);
       return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        return 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        return 'Account already exists for that email.';
-      }
+      logger.e(e.stackTrace);
+      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (e) {
-      logger.e(e);
+      throw const SignUpWithEmailAndPasswordFailure();
     }
   }
 
@@ -154,15 +151,11 @@ class RemoteDataSource implements IRemoteDataSource {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email!);
     } on FirebaseAuthException catch (e) {
-      if (e.code == '_firebaseAuth/invalid-email') {
-        return 'Invalid email';
-      } else if (e.code == '_firebaseAuth/user-not-found') {
-        return 'No user found for this email';
-      }
+      logger.e(e.stackTrace);
+      throw PasswordRecoveryFailure.fromCode(e.code);
     } catch (e) {
-      logger.e(e);
+      throw const PasswordRecoveryFailure();
     }
-    return null;
   }
 
   @override
@@ -172,35 +165,23 @@ class RemoteDataSource implements IRemoteDataSource {
       await _firebaseAuth.confirmPasswordReset(
           code: code!, newPassword: newPassword!);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        return 'Weak password';
-      } else if (e.code == 'expired-action-code') {
-        return 'Invalid reset code';
-      } else if (e.code == 'user-not-found') {
-        return 'Account disabled';
-      } else if (e.code == 'invalid-action-code') {
-        return 'Invalid reset code';
-      }
+      logger.e(e.stackTrace);
+      throw ConfirmPasswordRecoveryFailure.fromCode(e.code);
     } catch (e) {
-      logger.e(e);
+      throw const ConfirmPasswordRecoveryFailure();
     }
-    return null;
   }
 
-  @override
-  Future<String?> anonymousSignIn() async {
+  
+
+  Future<void> logOut() async {
     try {
-      final UserCredential userCredential =
-          await _firebaseAuth.signInAnonymously();
-      return userCredential.user!.uid;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'operation-not-allowed') {
-        return 'Try again in a moment.';
-      } else {
-        return 'There was an internal erorr. Try again later!';
-      }
-    } catch (e) {
-      logger.e(e);
+      await Future.wait([
+        _firebaseAuth.signOut(),
+        _googleSignIn.signOut(),
+      ]);
+    } catch (_) {
+      throw LogOutFailure();
     }
   }
 
