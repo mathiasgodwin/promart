@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:promart/src/core/utils/models/google_auth.dart';
+import 'package:promart/src/core/utils/exceptions/dio_exceptions.dart';
+import 'package:promart/src/core/utils/exceptions/get_remote_exceptions.dart';
+import 'package:promart/src/core/utils/exceptions/google_auth_exceptions.dart';
+import 'package:promart/src/core/utils/exceptions/post_remote_exceptions.dart';
 import 'package:promart/src/features/promart/data/data.dart';
 import 'package:logger/logger.dart';
 
@@ -24,7 +27,6 @@ abstract class IRemoteDataSource {
   Future<String?> passwordRecovery({String? email});
 
   Future<String?> confirmPasswordRecovery({String? code, String? newPassword});
-
 
   Future<User?> getCurrentUser();
 
@@ -172,8 +174,6 @@ class RemoteDataSource implements IRemoteDataSource {
     }
   }
 
-  
-
   Future<void> logOut() async {
     try {
       await Future.wait([
@@ -218,10 +218,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const PostRemoteException('Add to cart Error');
       }
-      throw Exception;
     }
   }
 
@@ -250,10 +250,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const PostRemoteException('Delete Cart Error');
       }
-      throw Exception;
     }
   }
 
@@ -282,10 +282,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const PostRemoteException('Delete user error');
       }
-      throw Exception;
     }
   }
 
@@ -315,10 +315,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException('Get All carts error');
       }
-      throw Exception;
     }
   }
 
@@ -347,10 +347,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException('Get all category error');
       }
-      throw Exception;
     }
   }
 
@@ -382,10 +382,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -414,10 +414,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -449,10 +449,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -481,10 +481,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -514,10 +514,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -546,10 +546,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -578,10 +578,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -612,10 +612,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -645,10 +645,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 
@@ -678,10 +678,10 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (e) {
       logger.e(e);
       if (e is DioError) {
-        throw Exception;
-        //TODO: Add Dio Exception error Logger
+        throw DioException();
+      } else {
+        throw const GetRemoteException();
       }
-      throw Exception;
     }
   }
 }

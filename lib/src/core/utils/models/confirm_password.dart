@@ -1,19 +1,18 @@
 import 'package:formz/formz.dart';
-import 'package:flutter/material.dart';
 
 enum ConfirmedPasswordValidationError {
   invalid,
   mismatch,
 }
 
-class ConfirmPassword extends FormzInput<String, ConfirmedPasswordValidationError> {
+class ConfirmedPassword extends FormzInput<String, ConfirmedPasswordValidationError> {
   final String password;
 
-  const ConfirmPassword.pure({
+  const ConfirmedPassword.pure({
     this.password = ''
   }) : super.pure('');
 
-  const ConfirmPassword.dirty({
+  const ConfirmedPassword.dirty({
     required this.password,
     String value = ''
   }) : super.dirty(value);

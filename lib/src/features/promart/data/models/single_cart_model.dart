@@ -70,7 +70,6 @@ class SingleCartData extends Equatable {
       };
 
   @override
-  // TODO: implement props
   List<Object?> get props => [id, userId, date, products, v];
 }
 

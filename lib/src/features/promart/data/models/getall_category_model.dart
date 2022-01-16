@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class AllCategoryModel extends Equatable {
+  // ignore: prefer_const_constructors_in_immutables
   AllCategoryModel({
     required this.data,
   });

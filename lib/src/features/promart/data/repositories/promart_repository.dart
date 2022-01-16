@@ -28,8 +28,6 @@ class PromartRepository implements IPromartRepository {
     }
   }
 
-  
-
   @override
   Future<String?> confirmPasswordRecovery(
       {String? code, String? newPassword}) async {
@@ -39,7 +37,7 @@ class PromartRepository implements IPromartRepository {
       return response;
     } catch (e) {
       logger.e(e);
-      throw ServerException();
+      rethrow;
     }
   }
 
@@ -51,7 +49,7 @@ class PromartRepository implements IPromartRepository {
       return response;
     } catch (e) {
       logger.e(e);
-      throw ServerException();
+      rethrow;
     }
   }
 
@@ -63,7 +61,7 @@ class PromartRepository implements IPromartRepository {
       return response;
     } catch (e) {
       logger.e(e);
-      throw ServerException();
+      rethrow;
     }
   }
 
@@ -73,7 +71,7 @@ class PromartRepository implements IPromartRepository {
       await _dataSource.googleSignIn();
     } catch (e) {
       logger.e(e);
-      throw ServerException();
+      rethrow;
     }
   }
 
@@ -84,7 +82,7 @@ class PromartRepository implements IPromartRepository {
       return response;
     } catch (e) {
       logger.e(e);
-      throw ServerException();
+      rethrow;
     }
   }
 
@@ -106,7 +104,7 @@ class PromartRepository implements IPromartRepository {
       return response;
     } catch (e) {
       logger.e(e);
-      throw ServerException();
+      rethrow;
     }
   }
 
@@ -117,7 +115,7 @@ class PromartRepository implements IPromartRepository {
       return user;
     } catch (e) {
       logger.e(e);
-      throw ServerException();
+      rethrow;
     }
   }
 
@@ -128,7 +126,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.addCart(carts: carts);
       return response;
     } catch (e) {
-      throw Exception('AddCart Exception:');
+      rethrow;
     }
   }
 
@@ -138,7 +136,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.deleteCart(cartId: cartId);
       return response;
     } catch (e) {
-      throw Exception('DeleteCart Exception:');
+      rethrow;
     }
   }
 
@@ -148,7 +146,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.deleteUser(userId: userId);
       return response;
     } catch (e) {
-      throw Exception('DeleteUser Exception:');
+      rethrow;
     }
   }
 
@@ -159,7 +157,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.getAllCarts(limit: limit, sort: sort);
       return response;
     } catch (e) {
-      throw Exception('GetAllCarts Exception:');
+      rethrow;
     }
   }
 
@@ -169,7 +167,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.getAllCategory();
       return response;
     } catch (e) {
-      throw Exception('GetAllCategory Exception:');
+      rethrow;
     }
   }
 
@@ -181,7 +179,7 @@ class PromartRepository implements IPromartRepository {
           await _dataSource.getAllProducts(sort: sort, limit: limit);
       return response;
     } catch (e) {
-      throw Exception('GetAllProducts Exception:');
+      rethrow;
     }
   }
 
@@ -191,7 +189,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.getAllUsers();
       return response;
     } catch (e) {
-      throw Exception('GetAllUsers Exception:');
+      rethrow;
     }
   }
 
@@ -203,7 +201,7 @@ class PromartRepository implements IPromartRepository {
           category: category, limit: limit, sort: sort);
       return response;
     } catch (e) {
-      throw Exception('GetCategory Exception:');
+      rethrow;
     }
   }
 
@@ -213,7 +211,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.getSingleCart(cartId: cartId);
       return response;
     } catch (e) {
-      throw Exception('GetSingleCart Exception:');
+      rethrow;
     }
   }
 
@@ -224,7 +222,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.getSingleProduct(productId: productId);
       return response;
     } catch (e) {
-      throw Exception('GetSingleProduct Exception:');
+      rethrow;
     }
   }
 
@@ -234,7 +232,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.getSingleUser(userId: userId);
       return response;
     } catch (e) {
-      throw Exception('GetSingleUser Exception:');
+      rethrow;
     }
   }
 
@@ -244,7 +242,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.getUserCart(userId: userId);
       return response;
     } catch (e) {
-      throw Exception('GetUserCart Exception:');
+      rethrow;
     }
   }
 
@@ -256,7 +254,7 @@ class PromartRepository implements IPromartRepository {
           await _dataSource.loginUser(password: password, username: username);
       return response;
     } catch (e) {
-      throw Exception('LoginUser Exception:');
+      rethrow;
     }
   }
 
@@ -266,7 +264,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.registerUser(user: user);
       return response;
     } catch (e) {
-      throw Exception('RegisterUser Exception:');
+      rethrow;
     }
   }
 
@@ -276,7 +274,7 @@ class PromartRepository implements IPromartRepository {
       final response = await _dataSource.updateUser(user: user);
       return response;
     } catch (e) {
-      throw Exception('UpdateUser Exception:');
+      rethrow;
     }
   }
 }
