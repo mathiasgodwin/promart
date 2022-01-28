@@ -25,3 +25,5 @@ export 'usecases/firebase_is_signin_state.dart';
 export 'usecases/firebase_recover_password.dart';
 export 'usecases/firebase_get_current_user.dart';
 export 'usecases/firebase_signout_user.dart';
+export 'usecases/firebase_phone_signin.dart';
+export 'usecases/firebase_phone_verify.dart';

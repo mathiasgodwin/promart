@@ -4,6 +4,15 @@ import 'package:promart/src/features/promart/data/data.dart';
 abstract class IPromartRepository {
   /// Firebase Authentication
   Future<void> signOut();
+  Stream<String> signInWithPhoneNumber({
+    required String phoneNumber,
+    required Duration timeout,
+  });
+  //Sends SMS code to the backend for verification, emit error messages, if any.
+  Future<void> verifySmsCode({
+    required String smsCode,
+    required String verificationId,
+  });
   Future<bool?> isSignedIn();
   Stream<User?> onAuthChange();
   Future<String?> googleSignIn();

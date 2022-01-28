@@ -24,7 +24,35 @@ class PromartRepository implements IPromartRepository {
     try {
       await _dataSource.signOut();
     } catch (e) {
-      throw ServerFailure();
+      rethrow;
+    }
+  }
+
+  @override
+  Stream<String> signInWithPhoneNumber({
+    required String phoneNumber,
+    required Duration timeout,
+  }) async* {
+    try {
+      final response = _dataSource.signInWithPhoneNumber(
+          phoneNumber: phoneNumber, timeout: timeout);
+      yield* response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //Sends SMS code to the backend for verification, emit error messages, if any.
+  @override
+  Future<void> verifySmsCode({
+    required String smsCode,
+    required String verificationId,
+  }) async {
+    try {
+      _dataSource.verifySmsCode(
+          smsCode: smsCode, verificationId: verificationId);
+    } catch (e) {
+      rethrow;
     }
   }
 

@@ -158,7 +158,7 @@ class PasswordRecoveryFailure implements Exception {
   }
 }
 
-class ConfirmPasswordRecoveryFailure {
+class ConfirmPasswordRecoveryFailure implements Exception {
   const ConfirmPasswordRecoveryFailure(
       [this.message = 'An unknow exception occured.']);
 
@@ -181,4 +181,31 @@ class ConfirmPasswordRecoveryFailure {
         return const ConfirmPasswordRecoveryFailure();
     }
   }
+}
+
+class PhoneAuthError implements Exception {
+  const PhoneAuthError([this.message = 'An unknown error has occured']);
+
+  final String message;
+
+  factory PhoneAuthError.fromCode(String code) {
+    switch (code) {
+      case 'invalid-phone-number':
+        return const PhoneAuthError('The phone number is invalid.');
+      case 'too-many-requests':
+        return const PhoneAuthError('Error due too many request.');
+      case 'app-not-authorized':
+        return const PhoneAuthError('An unknown error.');
+      case 'session-expired':
+        return const PhoneAuthError('Current session expired, try again!');
+      case 'invalid-verification-code':
+        return const PhoneAuthError('Invalid verification code.');
+      default:
+        return const PhoneAuthError();
+    }
+  }
+}
+
+class PhoneAuthSmsTimeoutError implements Exception {
+  const PhoneAuthSmsTimeoutError();
 }

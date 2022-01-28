@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,6 +15,16 @@ import 'dart:convert';
 abstract class IRemoteDataSource {
   /// Firebase Authentication
   Future<void> signOut();
+
+  Stream<String> signInWithPhoneNumber({
+    required String phoneNumber,
+    required Duration timeout,
+  });
+  //Sends SMS code to the backend for verification, emit error messages, if any.
+  Future<void> verifySmsCode({
+    required String smsCode,
+    required String verificationId,
+  });
 
   Future<bool> isSignedIn();
 
@@ -80,6 +92,57 @@ class RemoteDataSource implements IRemoteDataSource {
   );
 
   /// Firebase Authentication
+
+  //Sends phone number to the backend, emit error messages, if any.
+  @override
+  Stream<String> signInWithPhoneNumber({
+    required String phoneNumber,
+    required Duration timeout,
+  }) async* {
+    final StreamController<String> streamController =
+        StreamController<String>();
+    await _firebaseAuth.verifyPhoneNumber(
+        timeout: timeout,
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          // ANDROID ONLY!
+          // Sign the user in (or link) with the auto-generated credential.
+          // The feature is currently disabled for the sake of simplicity of the tutorial.
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          // Update the UI - wait for the user to enter the SMS code
+          streamController.add(verificationId);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // Auto-resolution timed out...
+          throw const PhoneAuthSmsTimeoutError();
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          logger.e(e.stackTrace);
+          throw PhoneAuthError.fromCode(e.code);
+        });
+    yield* streamController.stream;
+  }
+
+  //Sends SMS code to the backend for verification, emit error messages, if any.
+  @override
+  Future<void> verifySmsCode({
+    required String smsCode,
+    required String verificationId,
+  }) async {
+    try {
+      final PhoneAuthCredential phoneAuthCredential =
+          PhoneAuthProvider.credential(
+              smsCode: smsCode, verificationId: verificationId);
+
+      await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+    } on FirebaseAuthException catch (e) {
+      throw PhoneAuthError.fromCode(e.code);
+    } catch (e) {
+      throw const PhoneAuthError();
+    }
+  }
+
   @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
