@@ -1,26 +1,36 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:promart/src/features/promart/data/data.dart';
+import 'package:promart/src/features/promart/data/models/user_model.dart';
 
 abstract class IPromartRepository {
   /// Firebase Authentication
   Future<void> signOut();
+
   Stream<String> signInWithPhoneNumber({
     required String phoneNumber,
     required Duration timeout,
   });
+
   //Sends SMS code to the backend for verification, emit error messages, if any.
   Future<void> verifySmsCode({
     required String smsCode,
     required String verificationId,
   });
+
   Future<bool?> isSignedIn();
-  Stream<User?> onAuthChange();
+
+  Stream<User> get user;
+
   Future<String?> googleSignIn();
+
   Future<String?> emailSignIn({String? email, String? password});
+
   Future<String?> emailSignUp({String? email, String? password});
+
   Future<String?> passwordRecovery({String? email});
+
   Future<String?> confirmPasswordRecovery({String? code, String? newPassword});
-  Future<User?> getCurrentUser();
+
+  User get currentUser;
 
   /// Fakestore API
   Future<AllProductModel?> getAllProducts({String sort = 'dsc', String? limit});

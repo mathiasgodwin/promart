@@ -1,7 +1,8 @@
 import 'package:errors/errors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:logger/logger.dart';
 import 'package:promart/src/features/promart/data/data.dart';
+import 'package:promart/src/features/promart/data/models/user_model.dart';
 import 'package:promart/src/features/promart/domain/domain.dart';
 
 class PromartRepository implements IPromartRepository {
@@ -115,9 +116,9 @@ class PromartRepository implements IPromartRepository {
   }
 
   @override
-  Stream<User?> onAuthChange() {
+   User get currentUser {
     try {
-      final response = _dataSource.onAuthChange();
+      final response = _dataSource.currentUser;
       return response;
     } catch (e) {
       logger.e(e);
@@ -137,9 +138,9 @@ class PromartRepository implements IPromartRepository {
   }
 
   @override
-  Future<User?> getCurrentUser() async {
+  Stream<User> get user {
     try {
-      final user = await _dataSource.getCurrentUser();
+      final user = _dataSource.user;
       return user;
     } catch (e) {
       logger.e(e);

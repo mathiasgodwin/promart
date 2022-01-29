@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:promart/src/core/utils/cache/cache.dart';
 import 'package:promart/src/core/utils/exceptions/dio_exceptions.dart';
 import 'package:promart/src/core/utils/exceptions/get_remote_exceptions.dart';
 import 'package:promart/src/core/utils/exceptions/google_auth_exceptions.dart';
@@ -11,6 +15,8 @@ import 'package:promart/src/features/promart/data/data.dart';
 import 'package:logger/logger.dart';
 
 import 'dart:convert';
+
+import 'package:promart/src/features/promart/data/models/user_model.dart';
 
 abstract class IRemoteDataSource {
   /// Firebase Authentication
@@ -28,8 +34,6 @@ abstract class IRemoteDataSource {
 
   Future<bool> isSignedIn();
 
-  Stream<User?> onAuthChange();
-
   Future<String?> googleSignIn();
 
   Future<String?> emailSignIn({String? email, String? password});
@@ -39,8 +43,8 @@ abstract class IRemoteDataSource {
   Future<String?> passwordRecovery({String? email});
 
   Future<String?> confirmPasswordRecovery({String? code, String? newPassword});
-
-  Future<User?> getCurrentUser();
+  Stream<User> get user;
+  User get currentUser;
 
   /// Fakestore API
   Future<AllProductModel?> getAllProducts({String sort = 'dsc', String? limit});
@@ -78,8 +82,11 @@ abstract class IRemoteDataSource {
 }
 
 class RemoteDataSource implements IRemoteDataSource {
+  final CacheClient _cache = CacheClient();
+
   final _client = Dio();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final firebase_auth.FirebaseAuth _firebaseAuth =
+      firebase_auth.FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   final logger = Logger(
@@ -91,7 +98,31 @@ class RemoteDataSource implements IRemoteDataSource {
         printEmojis: true),
   );
 
+  /// User cache key.
+  /// Should only be used for testing purposes.
+  static const userCacheKey = '__user_cache_key__';
+
   /// Firebase Authentication
+
+  /// Stream of [User] which will emit the current user when
+  /// the authentication state changes.
+  ///
+  /// Emits [User.empty] if the user is not authenticated.
+  @override
+  Stream<User> get user {
+    return _firebaseAuth.authStateChanges().map((firebaseUser) {
+      final user = firebaseUser == null ? User.empty : firebaseUser.toUser;
+      _cache.write(key: userCacheKey, value: user);
+      return user;
+    });
+  }
+
+  /// Returns the current cached user.
+  /// Defaults to [User.empty] if there is no cached user.
+  @override
+  User get currentUser {
+    return _cache.read<User>(key: userCacheKey) ?? User.empty;
+  }
 
   //Sends phone number to the backend, emit error messages, if any.
   @override
@@ -104,7 +135,8 @@ class RemoteDataSource implements IRemoteDataSource {
     await _firebaseAuth.verifyPhoneNumber(
         timeout: timeout,
         phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
+        verificationCompleted:
+            (firebase_auth.PhoneAuthCredential credential) async {
           // ANDROID ONLY!
           // Sign the user in (or link) with the auto-generated credential.
           // The feature is currently disabled for the sake of simplicity of the tutorial.
@@ -155,11 +187,6 @@ class RemoteDataSource implements IRemoteDataSource {
   }
 
   @override
-  Stream<User?> onAuthChange() {
-    return _firebaseAuth.authStateChanges();
-  }
-
-  @override
   Future<String?> googleSignIn() async {
     await _googleSignIn.signOut();
 
@@ -172,8 +199,6 @@ class RemoteDataSource implements IRemoteDataSource {
         idToken: googleAuth.idToken,
       );
       await _firebaseAuth.signInWithCredential(credential);
-      User user = _firebaseAuth.currentUser!;
-      return user.uid;
     } on FirebaseAuthException catch (e) {
       logger.e(e.stackTrace);
       throw LogInWithGoogleFailure.fromCode(e.code);
@@ -185,7 +210,7 @@ class RemoteDataSource implements IRemoteDataSource {
   @override
   Future<String?> emailSignIn({String? email, String? password}) async {
     try {
-      UserCredential userCredential = await _firebaseAuth
+      firebase_auth.UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email!, password: password!);
       // return userCredential;
       return userCredential.user!.uid;
@@ -200,7 +225,7 @@ class RemoteDataSource implements IRemoteDataSource {
   @override
   Future<String?> emailSignUp({String? email, String? password}) async {
     try {
-      UserCredential userCredential = await _firebaseAuth
+      firebase_auth.UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email!, password: password!);
       return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
@@ -246,12 +271,6 @@ class RemoteDataSource implements IRemoteDataSource {
     } catch (_) {
       throw LogOutFailure();
     }
-  }
-
-  @override
-  Future<User?> getCurrentUser() async {
-    User? user = _firebaseAuth.currentUser;
-    return user;
   }
 
   /// Fakestore API
@@ -746,5 +765,11 @@ class RemoteDataSource implements IRemoteDataSource {
         throw const GetRemoteException();
       }
     }
+  }
+}
+
+extension on firebase_auth.User {
+  User get toUser {
+    return User(id: uid, email: email, name: displayName, photo: photoURL);
   }
 }
