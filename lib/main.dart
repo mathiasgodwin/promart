@@ -9,11 +9,11 @@ import 'package:promart/src/features/promart/data/repositories/promart_repositor
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  final authenticationRepository =
+  final promartRepository =
       PromartRepository(dataSource: RemoteDataSource());
-  await authenticationRepository.user.first;
+  await promartRepository.user.first;
   BlocOverrides.runZoned(
-    () => runApp(App(authenticationRepository: authenticationRepository)),
+    () => runApp(App(promartRespository: promartRepository)),
     blocObserver: AuthBlocObserver(),
   );
 }

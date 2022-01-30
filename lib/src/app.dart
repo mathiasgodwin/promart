@@ -9,19 +9,19 @@ import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authblo
 class App extends StatelessWidget {
   const App({
     Key? key,
-    required PromartRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
+    required PromartRepository promartRespository,
+  })  : _promartRespository = promartRespository,
         super(key: key);
 
-  final PromartRepository _authenticationRepository;
+  final PromartRepository _promartRespository;
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
-      value: _authenticationRepository,
+      value: _promartRespository,
       child: BlocProvider(
         create: (_) => AuthBloc(
-          authenticationRepository: _authenticationRepository,
+          promartRepository: _promartRespository,
         ),
         child: const AppView(),
       ),
@@ -35,6 +35,7 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: theme,
       home: FlowBuilder<AuthStatus>(
         state: context.select((AuthBloc bloc) => bloc.state.status),

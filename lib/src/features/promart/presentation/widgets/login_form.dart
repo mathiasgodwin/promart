@@ -23,25 +23,32 @@ class LoginForm extends StatelessWidget {
         }
       },
       child: Align(
-        alignment: const Alignment(0, -1 / 3),
+        alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/bloc_logo_small.png',
-                height: 120,
+              const Text('Welcome back',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Signin to continue.',
+                style: TextStyle(fontWeight: FontWeight.w400),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(
+                height: 8,
+              ),
               _EmailInput(),
-              const SizedBox(height: 8),
               _PasswordInput(),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _LoginButton(),
+              ),
               const SizedBox(height: 8),
-              _LoginButton(),
-              const SizedBox(height: 8),
-              _GoogleLoginButton(),
+              _ForgotPassword(),
               const SizedBox(height: 4),
-              _SignUpButton(),
             ],
           ),
         ),
@@ -56,14 +63,23 @@ class _EmailInput extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
-        return TextField(
-          key: const Key('loginForm_emailInput_textField'),
-          onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            labelText: 'email',
-            helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+        return Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: TextField(
+            key: const Key('loginForm_emailInput_textField'),
+            onChanged: (email) =>
+                context.read<LoginCubit>().emailChanged(email),
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              prefixIcon: const Padding(
+                padding: EdgeInsetsDirectional.only(start: 12.0),
+                child: Icon(Icons.mail_outline),
+              ),
+              border: const UnderlineInputBorder(),
+              labelText: 'Email / Phone',
+              helperText: '',
+              errorText: state.email.invalid ? 'invalid email' : null,
+            ),
           ),
         );
       },
@@ -77,18 +93,38 @@ class _PasswordInput extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
-        return TextField(
-          key: const Key('loginForm_passwordInput_textField'),
-          onChanged: (password) =>
-              context.read<LoginCubit>().passwordChanged(password),
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: 'password',
-            helperText: '',
-            errorText: state.password.invalid ? 'invalid password' : null,
+        return Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0, bottom: 0.0),
+          child: TextField(
+            key: const Key('loginForm_passwordInput_textField'),
+            onChanged: (password) =>
+                context.read<LoginCubit>().passwordChanged(password),
+            obscureText: true,
+            decoration: InputDecoration(
+              prefixIcon: const Padding(
+                padding: EdgeInsetsDirectional.only(start: 12.0),
+                child: Icon(Icons.lock_rounded),
+              ),
+              border: const UnderlineInputBorder(),
+              labelText: 'Password',
+              helperText: '',
+              errorText: state.password.invalid ? 'invalid password' : null,
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+class _ForgotPassword extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: const TextSpan(
+        text: 'Forgot Password?',
+        style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black87),
+      ),
     );
   }
 }
@@ -97,25 +133,20 @@ class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
-      buildWhen: (previous, current) => previous.status != current.status,
-      builder: (context, state) {
-        return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                key: const Key('loginForm_continue_raisedButton'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+        buildWhen: (previous, current) => previous.status != current.status,
+        builder: (context, state) {
+          return state.status.isSubmissionInProgress
+              ? const CircularProgressIndicator()
+              : ElevatedButton(
+                  onPressed: state.status.isValidated
+                      ? () => context.read<LoginCubit>().loginWithCredential()
+                      : () {},
+                  child: const Text('Login'),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(300, 40),
                   ),
-                  primary: const Color(0xFFFFD600),
-                ),
-                onPressed: state.status.isValidated
-                    ? () => context.read<LoginCubit>().loginWithCredential()
-                    : null,
-                child: const Text('LOGIN'),
-              );
-      },
-    );
+                );
+        });
   }
 }
 
