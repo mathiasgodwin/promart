@@ -22,80 +22,78 @@ class SignUpForm extends StatelessWidget {
             );
         }
       },
-      child: SingleChildScrollView(
-        child: Stack(
-            //
-            fit: StackFit.loose,
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: _AuthButton(),
-                ),
+      child: Stack(
+          //
+          fit: StackFit.loose,
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(0),
+                child: _AuthButton(),
               ),
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('Welcome!',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20)),
+            ),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Text('Welcome!',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'Create a new account.',
+                            style: TextStyle(fontWeight: FontWeight.w400),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'Create a new account.',
-                              style: TextStyle(fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: _EmailInput(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: _PasswordInput(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: _ConfirmPasswordInput(),
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: _EmailInput(),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: _PasswordInput(),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: _ConfirmPasswordInput(),
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    _SignUpButton(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      'Or Continue with',
-                      style: TextStyle(fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _SignUpButton(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    'Or Continue with',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                ],
               ),
+            ),
 
-              //
-            ]),
-      ),
+            //
+          ]),
     );
   }
 }

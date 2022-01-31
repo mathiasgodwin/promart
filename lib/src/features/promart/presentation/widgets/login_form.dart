@@ -23,56 +23,53 @@ class LoginForm extends StatelessWidget {
             );
         }
       },
-      child: SingleChildScrollView(
-        // primary: true,
-        child: Stack(
-            //
-            fit: StackFit.loose,
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: _SignUpButton(),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 90, bottom: 30, left: 10, right: 10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Welcome back',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20)),
+      child: Stack(
+          //
+          fit: StackFit.loose,
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: _SignUpButton(),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 90, bottom: 30, left: 10, right: 10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Welcome back',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Signin to continue.',
+                        style: TextStyle(fontWeight: FontWeight.w400),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'Signin to continue.',
-                          style: TextStyle(fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      _EmailInput(),
-                      _PasswordInput(),
-                      const SizedBox(height: 5),
-                      Center(child: _LoginButton()),
-                      const SizedBox(height: 16),
-                      _ForgotPassword(),
-                      const SizedBox(height: 5),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    _EmailInput(),
+                    _PasswordInput(),
+                    const SizedBox(height: 5),
+                    Center(child: _LoginButton()),
+                    const SizedBox(height: 16),
+                    _ForgotPassword(),
+                    const SizedBox(height: 4),
+                  ],
                 ),
               ),
+            ),
 
-              //
-            ]),
-      ),
+            //
+          ]),
     );
   }
 }
