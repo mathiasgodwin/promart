@@ -1,8 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
 import 'package:promart/src/features/promart/presentation/cubit/login/login_cubit.dart';
+import 'package:promart/src/features/promart/presentation/pages/forgot_password_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/signup_screen.dart';
 
 class LoginForm extends StatelessWidget {
@@ -22,36 +23,55 @@ class LoginForm extends StatelessWidget {
             );
         }
       },
-      child: Align(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+      child: SingleChildScrollView(
+        // primary: true,
+        child: Stack(
+            //
+            fit: StackFit.loose,
             children: [
-              const Text('Welcome back',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              const Text(
-                'Signin to continue.',
-                style: TextStyle(fontWeight: FontWeight.w400),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: _SignUpButton(),
               ),
-              const SizedBox(
-                height: 8,
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 90, bottom: 30, left: 10, right: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Welcome back',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20)),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'Signin to continue.',
+                          style: TextStyle(fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      _EmailInput(),
+                      _PasswordInput(),
+                      const SizedBox(height: 5),
+                      Center(child: _LoginButton()),
+                      const SizedBox(height: 16),
+                      _ForgotPassword(),
+                      const SizedBox(height: 5),
+                    ],
+                  ),
+                ),
               ),
-              _EmailInput(),
-              _PasswordInput(),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _LoginButton(),
-              ),
-              const SizedBox(height: 8),
-              _ForgotPassword(),
-              const SizedBox(height: 4),
-            ],
-          ),
-        ),
+
+              //
+            ]),
       ),
     );
   }
@@ -64,7 +84,7 @@ class _EmailInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: TextField(
             key: const Key('loginForm_emailInput_textField'),
             onChanged: (email) =>
@@ -73,9 +93,11 @@ class _EmailInput extends StatelessWidget {
             decoration: InputDecoration(
               prefixIcon: const Padding(
                 padding: EdgeInsetsDirectional.only(start: 12.0),
-                child: Icon(Icons.mail_outline),
+                child: Icon(
+                  Icons.mail_outline,
+                  size: 16,
+                ),
               ),
-              border: const UnderlineInputBorder(),
               labelText: 'Email / Phone',
               helperText: '',
               errorText: state.email.invalid ? 'invalid email' : null,
@@ -94,7 +116,7 @@ class _PasswordInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0, bottom: 0.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: TextField(
             key: const Key('loginForm_passwordInput_textField'),
             onChanged: (password) =>
@@ -103,9 +125,11 @@ class _PasswordInput extends StatelessWidget {
             decoration: InputDecoration(
               prefixIcon: const Padding(
                 padding: EdgeInsetsDirectional.only(start: 12.0),
-                child: Icon(Icons.lock_rounded),
+                child: Icon(
+                  Icons.lock_rounded,
+                  size: 16,
+                ),
               ),
-              border: const UnderlineInputBorder(),
               labelText: 'Password',
               helperText: '',
               errorText: state.password.invalid ? 'invalid password' : null,
@@ -117,13 +141,41 @@ class _PasswordInput extends StatelessWidget {
   }
 }
 
-class _ForgotPassword extends StatelessWidget {
+class _ForgotPassword extends StatefulWidget {
+  @override
+  State<_ForgotPassword> createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<_ForgotPassword> {
+  late TapGestureRecognizer _tapGestureRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _tapGestureRecognizer = TapGestureRecognizer()..onTap = _handlePress;
+  }
+
+  @override
+  void dispose() {
+    _tapGestureRecognizer.dispose();
+    super.dispose();
+  }
+
+  void _handlePress() {
+    Navigator.of(context).push<void>(RecoverPasswordScreen.route());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: const TextSpan(
-        text: 'Forgot Password?',
-        style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black87),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: RichText(
+        text: TextSpan(
+          recognizer: _tapGestureRecognizer,
+          text: 'Forgot Password?',
+          style: const TextStyle(
+              fontWeight: FontWeight.w400, color: Colors.black87),
+        ),
       ),
     );
   }
@@ -136,39 +188,25 @@ class _LoginButton extends StatelessWidget {
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
           return state.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
-              : ElevatedButton(
-                  onPressed: state.status.isValidated
-                      ? () => context.read<LoginCubit>().loginWithCredential()
-                      : () {},
-                  child: const Text('Login'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(300, 40),
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: CircularProgressIndicator(),
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ElevatedButton(
+                    onPressed: state.status.isValidated
+                        ? () => context.read<LoginCubit>().loginWithCredential()
+                        : () {},
+                    child: const Text('Login'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      elevation: 8,
+                      minimumSize: const Size(315, 50),
+                    ),
                   ),
                 );
         });
-  }
-}
-
-class _GoogleLoginButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ElevatedButton.icon(
-      key: const Key('loginForm_googleLogin_raisedButton'),
-      label: const Text(
-        'SIGN IN WITH GOOGLE',
-        style: TextStyle(color: Colors.white),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        primary: theme.colorScheme.secondary,
-      ),
-      icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
-      onPressed: () => context.read<LoginCubit>().loginWithGoogle(),
-    );
   }
 }
 
@@ -176,13 +214,12 @@ class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return TextButton(
-      key: const Key('loginForm_createAccount_flatButton'),
-      onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
-      child: Text(
-        'CREATE ACCOUNT',
-        style: TextStyle(color: theme.primaryColor),
-      ),
-    );
+    return ElevatedButton(
+        key: const Key('loginForm_createAccount_flatButton'),
+        onPressed: () => Navigator.of(context).push<void>(SignUpScreen.route()),
+        child: const Text('Creat New Account'),
+        style: ElevatedButton.styleFrom(
+            primary: theme.primaryColor,
+            minimumSize: const Size(double.infinity, 60)));
   }
 }
