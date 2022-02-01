@@ -8,6 +8,7 @@ class RecoverPasswordState extends Equatable {
     this.confirmedPassword = const ConfirmedPassword.pure(),
     this.status = FormzStatus.pure,
     this.errorMessage,
+    this.textEmail,
   });
 
   final Email email;
@@ -16,6 +17,7 @@ class RecoverPasswordState extends Equatable {
   final ConfirmedPassword confirmedPassword;
   final FormzStatus status;
   final String? errorMessage;
+  final String? textEmail;
 
   @override
   List<Object?> get props => [
@@ -25,6 +27,7 @@ class RecoverPasswordState extends Equatable {
         confirmedPassword,
         status,
         errorMessage,
+        textEmail,
       ];
 
   RecoverPasswordState copyWith({
@@ -34,6 +37,7 @@ class RecoverPasswordState extends Equatable {
     ConfirmedPassword? confirmedPassword,
     FormzStatus? status,
     String? errorMessage,
+    String? textEmail,
   }) {
     return RecoverPasswordState(
       email: email ?? this.email,
@@ -42,6 +46,7 @@ class RecoverPasswordState extends Equatable {
       confirmedPassword: confirmedPassword ?? this.confirmedPassword,
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
+      textEmail: textEmail ?? 'customerEmail',
     );
   }
 }

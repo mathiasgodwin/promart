@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:promart/src/features/promart/presentation/cubit/recover_password/recover_password_cubit.dart';
+import 'package:promart/src/features/promart/presentation/pages/verify_codesent_email_screen.dart';
 
 class RecoverPasswordForm extends StatelessWidget {
   const RecoverPasswordForm({Key? key}) : super(key: key);
@@ -12,6 +13,14 @@ class RecoverPasswordForm extends StatelessWidget {
     return BlocListener<RecoverPasswordCubit, RecoverPasswordState>(
       listener: (context, state) {
         if (state.status.isSubmissionSuccess) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentMaterialBanner()
+            ..showSnackBar(const SnackBar(
+                content: Text('Recovery code sent. pls, check your email.')));
+
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.of(context).push<void>(VerifyCodeScreen.route());
+          });
           //
         } else if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context)
@@ -90,7 +99,10 @@ class _SubmitButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
+            ? const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: CircularProgressIndicator(),
+              )
             : SizedBox(
                 width: double.infinity,
                 child: Padding(

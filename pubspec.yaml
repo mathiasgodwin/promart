@@ -9,6 +9,7 @@ environment:
   sdk: ">=2.15.1 <3.0.0"
 
 dependencies:
+  animated_check: ^1.0.5
   bloc: ^8.0.2
   connectivity_plus: ^2.2.0
   cupertino_icons: ^1.0.2

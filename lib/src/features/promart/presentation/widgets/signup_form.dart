@@ -203,9 +203,7 @@ class _AuthButton extends StatelessWidget {
           SizedBox(
             width: _w / 2,
             child: GFButton(
-              // borderShape: const RoundedRectangleBorder(
-              //     borderRadius:
-              //         BorderRadius.only(bottomLeft: Radius.elliptical(20, 40))),
+              borderShape: const BeveledRectangleBorder(),
               size: 75,
               padding: const EdgeInsets.all(0),
               color: Colors.blue,
@@ -216,9 +214,8 @@ class _AuthButton extends StatelessWidget {
           SizedBox(
             width: _w / 2,
             child: GFButton(
-              // borderShape: const RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.only(
-              //         bottomRight: Radius.elliptical(20, 40))),
+              borderShape: const BeveledRectangleBorder(),
+
               size: 75,
               padding: const EdgeInsets.all(0),
               color: Colors.red,

@@ -3,9 +3,9 @@
 /// {@endtemplate}
 class SignUpWithEmailAndPasswordFailure implements Exception {
   /// {@macro sign_up_with_email_and_password_failure}
-  const SignUpWithEmailAndPasswordFailure([
-    this.message = 'An unknown exception occurred.',
-  ]);
+  const SignUpWithEmailAndPasswordFailure(
+      [this.message =
+          'Could not send request, check your internet connection.']);
 
   /// Create an authentication message
   /// from a firebase authentication exception code.
@@ -48,7 +48,7 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
 class LogInWithEmailAndPasswordFailure implements Exception {
   /// {@macro log_in_with_email_and_password_failure}
   const LogInWithEmailAndPasswordFailure([
-    this.message = 'An unknown exception occurred.',
+    this.message = 'Could not send request, check your internet connection.',
   ]);
 
   /// Create an authentication message
@@ -87,7 +87,7 @@ class LogInWithEmailAndPasswordFailure implements Exception {
 class LogInWithGoogleFailure implements Exception {
   /// {@macro log_in_with_google_failure}
   const LogInWithGoogleFailure([
-    this.message = 'An unknown exception occurred.',
+    this.message = 'Could not send request, check your internet connection.',
   ]);
 
   /// Create an authentication message
@@ -140,7 +140,8 @@ class LogOutFailure implements Exception {}
 
 class PasswordRecoveryFailure implements Exception {
   const PasswordRecoveryFailure(
-      [this.message = 'An unknown exception occured.']);
+      [this.message =
+          'Could not send request, check your internet connection.']);
 
   final String message;
 
@@ -160,7 +161,8 @@ class PasswordRecoveryFailure implements Exception {
 
 class ConfirmPasswordRecoveryFailure implements Exception {
   const ConfirmPasswordRecoveryFailure(
-      [this.message = 'An unknow exception occured.']);
+      [this.message =
+          'Could not send request, check your internet connection.']);
 
   final String message;
 
@@ -184,7 +186,9 @@ class ConfirmPasswordRecoveryFailure implements Exception {
 }
 
 class PhoneAuthError implements Exception {
-  const PhoneAuthError([this.message = 'An unknown error has occured']);
+  const PhoneAuthError(
+      [this.message =
+          'Could not send request, check your internet connection.']);
 
   final String message;
 

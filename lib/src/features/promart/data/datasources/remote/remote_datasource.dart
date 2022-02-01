@@ -175,10 +175,7 @@ class RemoteDataSource implements IRemoteDataSource {
     }
   }
 
-  @override
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
-  }
+  
 
   @override
   Future<bool> isSignedIn() async {
@@ -261,8 +258,9 @@ class RemoteDataSource implements IRemoteDataSource {
       throw const ConfirmPasswordRecoveryFailure();
     }
   }
-
-  Future<void> logOut() async {
+  
+  @override 
+  Future<void> signOut() async {
     try {
       await Future.wait([
         _firebaseAuth.signOut(),

@@ -26,14 +26,21 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
 
   void emailChanged(String value) {
     final email = Email.dirty(value);
-    emit(state.copyWith(
-      email: email,
-      status: Formz.validate([
-        email,
-        state.password,
-        state.confirmedPassword,
-      ]),
-    ));
+
+    final textEmail = value;
+    print(value);
+    emit(
+      state.copyWith(
+        email: email,
+        textEmail: textEmail,
+        status: Formz.validate([
+          email,
+          // state.code,
+          // state.password,
+          // state.confirmedPassword,
+        ]),
+      ),
+    );
   }
 
   void passwordChanged(String value) {
@@ -46,7 +53,8 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
       password: password,
       confirmedPassword: confirmedPassword,
       status: Formz.validate([
-        state.email,
+        // state.code,
+        // state.email,
         password,
         confirmedPassword,
       ]),
@@ -61,8 +69,9 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
     emit(state.copyWith(
       confirmedPassword: confirmedPassword,
       status: Formz.validate([
-        state.email,
+        // state.email,
         state.password,
+        // state.code,
         confirmedPassword,
       ]),
     ));
@@ -70,9 +79,14 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
 
   void codeChanged(String value) {
     final code = Code.dirty(value);
+    print(code);
+    print(value);
     emit(state.copyWith(
       code: code,
-      status: Formz.validate([code]),
+      status: Formz.validate([
+        code,
+        // state.email,
+      ]),
     ));
   }
 
@@ -89,7 +103,7 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
           status: FormzStatus.invalid, errorMessage: e.toString()));
     } on PasswordRecoveryFailure catch (e) {
       emit(state.copyWith(
-          status: FormzStatus.submissionFailure, errorMessage: e.toString()));
+          status: FormzStatus.submissionFailure, errorMessage: e.message));
     } catch (_) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }

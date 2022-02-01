@@ -3,7 +3,7 @@ part of 'phone_signin_cubit.dart';
 class PhoneSigninState extends Equatable {
   const PhoneSigninState(
       {this.phone = const Phone.pure(),
-      this.code = const Code.pure(''),
+      this.code = const Code.pure(),
       this.verificationId,
       this.status = FormzStatus.pure,
       this.errorMessage});
