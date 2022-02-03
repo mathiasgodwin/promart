@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:promart/src/features/promart/presentation/cubit/login/login_cubit.dart';
 import 'package:promart/src/features/promart/presentation/pages/forgot_password_screen.dart';
+import 'package:promart/src/features/promart/presentation/pages/home_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/signup_screen.dart';
 
 class LoginForm extends StatelessWidget {
@@ -21,6 +22,8 @@ class LoginForm extends StatelessWidget {
                 content: Text(state.exceptionError ?? 'Authentication Failure'),
               ),
             );
+        } else if (state.status.isSubmissionSuccess) {
+          Navigator.of(context).push<void>(MaterialPageRoute(builder: (_) => const HomePage()));
         }
       },
       child: Stack(

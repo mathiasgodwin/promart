@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 import 'package:promart/src/features/promart/presentation/cubit/categories/categories_cubit.dart';
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
@@ -14,13 +15,30 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: const Text('Home'),
+        title: Column(
+          children: const [
+            Text('Promart!',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold)),
+            SizedBox(
+              height: 7,
+            ),
+            Text(
+              "Let's go shopping",
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            )
+          ],
+        ),
         actions: <Widget>[
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded)),
           IconButton(
             key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.shopping_basket_outlined),
             onPressed: () => context.read<AuthBloc>().add(AppLogoutRequested()),
           ),
         ],
@@ -37,7 +55,19 @@ class HomePage extends StatelessWidget {
             create: (_) => SingleProductCubit(),
           ),
         ],
-        child: const _AvailableCategories(),
+        child: ListView(
+          shrinkWrap: true,
+          children: const <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 20, left: 5),
+              child: Text(
+                'TOP CATEGORIES',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
+            _AvailableCategories()
+          ],
+        ),
       ),
     );
   }
@@ -80,12 +110,125 @@ class _AvailableCategories extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is CategoriesLoaded) {
-          return Container(
-            color: Colors.green,
-            child: Text(state.categories.data.first),
+          return Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 70,
+                      width: 70,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage('assets/images/cat2.jpg')),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                          ),
+                          // Text(
+                          //   state.categories.data[0],
+                          //   style: const TextStyle(
+                          //       color: Colors.white, fontSize: 12),
+                          // )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 70,
+                      width: 70,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                              decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: AssetImage('assets/images/cat3.jpg')),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          )),
+                          // Text(
+                          //   state.categories.data[1],
+                          //   style: const TextStyle(color: Colors.white),
+                          // )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 70,
+                      width: 70,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image:
+                                        AssetImage('assets/images/cat1.jpg'))),
+                          ),
+                          // Text(
+                          //   state.categories.data[2],
+                          //   style: const TextStyle(color: Colors.white),
+                          // )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 70,
+                      width: 70,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage('assets/images/1.jpg')),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                          ),
+                          // Text(
+                          //   state.categories.data[3],
+                          //   style: const TextStyle(color: Colors.white),
+                          // )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 70,
+                      width: 70,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                              decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: AssetImage('assets/images/3.jpg')),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          )),
+                          // // Text(
+                          // //   state.categories.data[3],
+                          // //   style: const TextStyle(color: Colors.white),
+                          // )
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
           );
         } else if (state is CategoriesLoading) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         } else if (state is CategoriesError) {
           return Center(
             child: Text(state.errorMessage!),

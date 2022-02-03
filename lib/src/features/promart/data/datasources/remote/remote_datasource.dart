@@ -284,7 +284,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -316,7 +316,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -348,7 +348,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -381,7 +381,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -409,19 +409,16 @@ class RemoteDataSource implements IRemoteDataSource {
           method: 'GET',
           sendTimeout: 10000 ~/ 2,
           receiveTimeout: 10000 ~/ 2,
-          // receiveDataWhenStatusError: true,
-          // validateStatus: (status) {
-          //   return status! < 500;
-          // },
-          responseType: ResponseType.json,
+          receiveDataWhenStatusError: true,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+          responseType: ResponseType.plain,
         ),
       );
-      print(response);
 
       if (response.statusCode == 200) {
-        String encodedResponse =
-            json.encode({'data': json.decode(response.data)});
-        return AllCategoryModel.fromJson(encodedResponse);
+        return AllCategoryModel.fromJson(response.data);
       } else {}
     } catch (e) {
       logger.e(e);
@@ -449,7 +446,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -481,7 +478,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -516,7 +513,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -548,7 +545,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -581,7 +578,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -613,7 +610,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -645,7 +642,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -679,7 +676,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -712,7 +709,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 
@@ -745,7 +742,7 @@ class RemoteDataSource implements IRemoteDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.json,
+          responseType: ResponseType.plain,
         ),
       );
 

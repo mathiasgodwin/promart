@@ -15,13 +15,12 @@ class AllCategoryModel extends Equatable {
   final List<String> data;
 
   factory AllCategoryModel.fromJson(String str) =>
-      AllCategoryModel.fromMap(json.decode(str));
+      AllCategoryModel.fromMap(json.decode(str) as List);
 
   String toJson() => json.encode(toMap());
 
-  factory AllCategoryModel.fromMap(Map<String, dynamic> json) =>
-      AllCategoryModel(
-        data: List<String>.from(json["data"].map((x) => x)),
+  factory AllCategoryModel.fromMap(List list) => AllCategoryModel(
+        data: List<String>.from(list.map((x) => x).toList()),
       );
 
   Map<String, dynamic> toMap() => {
