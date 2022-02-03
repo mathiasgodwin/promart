@@ -1,16 +1,6 @@
 # promart
 
-A new Flutter project.
+I am actually cloning a UI design of an app in Playstore. forgot password section might look flawed but not so, the original app send password reset code to the users email and then require it before typing a new password; Couldn't get a wrap around that using Google Firebase cuz it doesn't support it somehow. Still working on it though. So, I just built the UI for those part, and I'm using [Fake store API](https://fakestoreapi.com) for store back-end.
 
-## Getting Started
+### - Subsiquent *doc* will be added
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

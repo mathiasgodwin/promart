@@ -1,4 +1,4 @@
-import 'package:promart/src/features/promart/data/models/single_cart_model.dart';
+import 'package:promart/src/features/promart/data/data.dart';
 import 'package:promart/src/features/promart/domain/repositories/ipromart_repository.dart';
 
 class SingleProductUsecase {
@@ -7,7 +7,7 @@ class SingleProductUsecase {
 
   final IPromartRepository _repository;
 
-  Future<SingleCartModel?> call(String cartId) async {
-    return _repository.getSingleCart(cartId: cartId);
+  Future<SingleProductModel?> call(String productId) async {
+    return _repository.getSingleProduct(productId: productId);
   }
 }

@@ -7,7 +7,8 @@ class GetAllProductUsecase {
 
   final IPromartRepository _repository;
 
-  Future<AllProductModel?> call() async {
-    return await _repository.getAllProducts();
+  Future<AllProductModel?> call({String? sort, String? limit}) async {
+    return await _repository.getAllProducts(
+        sort: sort ?? 'dsc', limit: limit ?? '20');
   }
 }

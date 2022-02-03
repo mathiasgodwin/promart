@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:promart/src/app.dart';
 import 'package:promart/src/bloc_observer.dart';
 import 'package:promart/src/features/promart/data/datasources/remote/remote_datasource.dart';

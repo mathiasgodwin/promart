@@ -1,7 +1,5 @@
 import 'package:animated_check/animated_check.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
 

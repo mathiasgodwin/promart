@@ -35,9 +35,6 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
         textEmail: textEmail,
         status: Formz.validate([
           email,
-          // state.code,
-          // state.password,
-          // state.confirmedPassword,
         ]),
       ),
     );
@@ -79,8 +76,7 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
 
   void codeChanged(String value) {
     final code = Code.dirty(value);
-    print(code);
-    print(value);
+
     emit(state.copyWith(
       code: code,
       status: Formz.validate([

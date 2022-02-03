@@ -150,7 +150,7 @@ class RemoteDataSource implements IRemoteDataSource {
           throw const PhoneAuthSmsTimeoutError();
         },
         verificationFailed: (FirebaseAuthException e) {
-          logger.e(e.stackTrace);
+          logger.e(e.message);
           throw PhoneAuthError.fromCode(e.code);
         });
     yield* streamController.stream;
@@ -175,8 +175,6 @@ class RemoteDataSource implements IRemoteDataSource {
     }
   }
 
-  
-
   @override
   Future<bool> isSignedIn() async {
     final currentUser = _firebaseAuth.currentUser;
@@ -197,7 +195,7 @@ class RemoteDataSource implements IRemoteDataSource {
       );
       await _firebaseAuth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      logger.e(e.stackTrace);
+      logger.e(e.message);
       throw LogInWithGoogleFailure.fromCode(e.code);
     } catch (e) {
       throw const LogInWithGoogleFailure();
@@ -212,7 +210,7 @@ class RemoteDataSource implements IRemoteDataSource {
       // return userCredential;
       return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
-      logger.e(e.stackTrace);
+      logger.e(e.message);
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (e) {
       throw const LogInWithEmailAndPasswordFailure();
@@ -226,7 +224,7 @@ class RemoteDataSource implements IRemoteDataSource {
           .createUserWithEmailAndPassword(email: email!, password: password!);
       return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
-      logger.e(e.stackTrace);
+      logger.e(e.message);
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (e) {
       throw const SignUpWithEmailAndPasswordFailure();
@@ -238,7 +236,7 @@ class RemoteDataSource implements IRemoteDataSource {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email!);
     } on FirebaseAuthException catch (e) {
-      logger.e(e.stackTrace);
+      logger.e(e.message);
       throw PasswordRecoveryFailure.fromCode(e.code);
     } catch (e) {
       throw const PasswordRecoveryFailure();
@@ -252,14 +250,14 @@ class RemoteDataSource implements IRemoteDataSource {
       await _firebaseAuth.confirmPasswordReset(
           code: code!, newPassword: newPassword!);
     } on FirebaseAuthException catch (e) {
-      logger.e(e.stackTrace);
+      logger.e(e.message);
       throw ConfirmPasswordRecoveryFailure.fromCode(e.code);
     } catch (e) {
       throw const ConfirmPasswordRecoveryFailure();
     }
   }
-  
-  @override 
+
+  @override
   Future<void> signOut() async {
     try {
       await Future.wait([
@@ -409,15 +407,16 @@ class RemoteDataSource implements IRemoteDataSource {
         RequestOptions(
           path: 'https://fakestoreapi.com/products/categories',
           method: 'GET',
-          sendTimeout: 30000,
-          receiveTimeout: 30000,
-          receiveDataWhenStatusError: true,
-          validateStatus: (status) {
-            return status! < 500;
-          },
+          sendTimeout: 10000 ~/ 2,
+          receiveTimeout: 10000 ~/ 2,
+          // receiveDataWhenStatusError: true,
+          // validateStatus: (status) {
+          //   return status! < 500;
+          // },
           responseType: ResponseType.json,
         ),
       );
+      print(response);
 
       if (response.statusCode == 200) {
         String encodedResponse =

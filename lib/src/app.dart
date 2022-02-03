@@ -5,6 +5,11 @@ import 'package:promart/src/configs/routes/routes.dart';
 import 'package:promart/src/configs/theme/theme.dart';
 import 'package:promart/src/features/promart/data/repositories/promart_repository.dart';
 import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
+import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
+import 'package:promart/src/features/promart/presentation/pages/home_screen.dart';
+import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
+
+import 'features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -34,13 +39,12 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final routeBloc = BlocProvider.of<AuthBloc>(context);
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: theme,
-      home: FlowBuilder<AuthStatus>(
-        state: context.select((AuthBloc bloc) => bloc.state.status),
-        onGeneratePages: onGenerateAppViewPages,
-      ),
-    );
+        debugShowCheckedModeBanner: false,
+        theme: theme,
+        home: routeBloc.state.status == AuthStatus.authenticated
+            ? HomePage()
+            : LoginScreen());
   }
 }

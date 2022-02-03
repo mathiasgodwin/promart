@@ -3,8 +3,6 @@ part of 'authbloc_bloc.dart';
 enum AuthStatus {
   authenticated,
   unauthenticated,
-  // forgotpassword,
-
 }
 
 class AuthState extends Equatable {
