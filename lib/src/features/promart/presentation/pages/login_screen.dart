@@ -6,11 +6,14 @@ import 'package:promart/src/features/promart/presentation/widgets/login_form.dar
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
-  static Page page() => const MaterialPage<void>(child: LoginScreen());
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => const LoginScreen());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

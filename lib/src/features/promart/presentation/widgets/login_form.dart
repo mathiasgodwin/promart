@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:promart/src/core/utils/screen/screen_util.dart';
 import 'package:promart/src/features/promart/presentation/cubit/login/login_cubit.dart';
 import 'package:promart/src/features/promart/presentation/pages/forgot_password_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/home_screen.dart';
@@ -23,56 +25,56 @@ class LoginForm extends StatelessWidget {
               ),
             );
         } else if (state.status.isSubmissionSuccess) {
-          Navigator.of(context).push<void>(MaterialPageRoute(builder: (_) => const HomePage()));
+          Navigator.of(context).push<void>(HomeScreen.route());
         }
       },
-      child: Stack(
-          //
-          fit: StackFit.loose,
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: _SignUpButton(),
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 90, bottom: 30, left: 10, right: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Welcome back',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20)),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Signin to continue.',
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    _EmailInput(),
-                    _PasswordInput(),
-                    const SizedBox(height: 5),
-                    Center(child: _LoginButton()),
-                    const SizedBox(height: 16),
-                    _ForgotPassword(),
-                    const SizedBox(height: 4),
-                  ],
+      child: Stack(children: [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: _SignUpButton(),
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(
+                top: normalHeight(context) * 0.2, left: 10, right: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Welcome back',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 ),
-              ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Signin to continue.',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                _EmailInput(),
+                _PasswordInput(),
+                const SizedBox(height: 5),
+                Center(child: _LoginButton()),
+                const SizedBox(height: 16),
+                _ForgotPassword(),
+                const SizedBox(height: 4),
+              ],
             ),
+          ),
+        ),
 
-            //
-          ]),
+        //
+      ]),
     );
   }
 }

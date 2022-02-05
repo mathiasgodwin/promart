@@ -6,15 +6,17 @@ import 'package:promart/src/features/promart/presentation/widgets/recover_passwo
 class RecoverPasswordScreen extends StatelessWidget {
   const RecoverPasswordScreen({Key? key}) : super(key: key);
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const RecoverPasswordScreen());
+    return MaterialPageRoute<void>(
+        builder: (_) => const RecoverPasswordScreen());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider<RecoverPasswordCubit>(create:(_) => RecoverPasswordCubit(), 
-      child: const RecoverPasswordForm(),
-      )
-    );
+        resizeToAvoidBottomInset: false,
+        body: BlocProvider<RecoverPasswordCubit>(
+          create: (_) => RecoverPasswordCubit(),
+          child: const RecoverPasswordForm(),
+        ));
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
+import 'package:promart/src/core/utils/screen/screen_util.dart';
 import 'package:promart/src/features/promart/presentation/cubit/signup/signup_cubit.dart';
 
 class SignUpForm extends StatelessWidget {
@@ -59,9 +60,7 @@ class SignUpForm extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.w400),
                           ),
                         ),
-                        const SizedBox(
-                          height: 40,
-                        ),
+                        SizedBox(height: normalHeight(context) * 0.04),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: _EmailInput(),
@@ -77,12 +76,12 @@ class SignUpForm extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    height: normalHeight(context) * 0.02,
                   ),
                   _SignUpButton(),
-                  const SizedBox(
-                    height: 20,
+                  SizedBox(
+                    height: normalHeight(context) * 0.02,
                   ),
                   const Text(
                     'Or Continue with',
@@ -193,7 +192,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
 class _AuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double _w = MediaQuery.of(context).size.width;
+    double _w = width(context);
 
     return SizedBox(
       width: _w,
@@ -215,7 +214,6 @@ class _AuthButton extends StatelessWidget {
             width: _w / 2,
             child: GFButton(
               borderShape: const BeveledRectangleBorder(),
-
               size: 75,
               padding: const EdgeInsets.all(0),
               color: Colors.red,

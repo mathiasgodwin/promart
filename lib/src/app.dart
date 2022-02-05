@@ -7,6 +7,7 @@ import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authblo
 import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 import 'package:promart/src/features/promart/presentation/pages/home_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
+import 'package:promart/src/features/promart/presentation/pages/splash_screen.dart';
 
 import 'features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 
@@ -33,17 +34,48 @@ class App extends StatelessWidget {
   }
 }
 
-class AppView extends StatelessWidget {
+class AppView extends StatefulWidget {
   const AppView({Key? key}) : super(key: key);
 
   @override
+  State<AppView> createState() => _AppViewState();
+}
+
+class _AppViewState extends State<AppView> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get _navigator => _navigatorKey.currentState!;
+
+  @override
   Widget build(BuildContext context) {
-    final routeBloc = BlocProvider.of<AuthBloc>(context);
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: theme,
-        home: routeBloc.state.status == AuthStatus.authenticated
-            ? HomePage()
-            : LoginScreen());
+      navigatorKey: _navigatorKey,
+      builder: (context, child) {
+        return BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            switch (state.status) {
+              case AuthStatus.authenticated:
+                _navigator.pushAndRemoveUntil<void>(
+                  HomeScreen.route(),
+                  (route) => false,
+                );
+                break;
+              case AuthStatus.unauthenticated:
+                _navigator.pushAndRemoveUntil<void>(
+                  LoginScreen.route(),
+                  (route) => false,
+                );
+                break;
+              default:
+                break;
+            }
+          },
+          child: child,
+        );
+      },
+      debugShowCheckedModeBanner: false,
+      theme: theme,
+      onGenerateRoute: (_) => SplashScreen.route(),
+    );
   }
 }
