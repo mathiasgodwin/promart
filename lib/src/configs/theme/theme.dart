@@ -36,5 +36,5 @@ final theme = ThemeData(
     // prefixIconColor: Colors.purple,
   ),
   textTheme: GoogleFonts.openSansTextTheme(),
-  scaffoldBackgroundColor: const Color(0xFFF5EDF1),
+  scaffoldBackgroundColor: Colors.white,
 );

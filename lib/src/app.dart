@@ -8,6 +8,7 @@ import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authblo
 import 'package:promart/src/features/promart/presentation/pages/home_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/splash_screen.dart';
+import 'package:promart/src/features/promart/presentation/widgets/scroll_behavior.dart';
 
 import 'features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 
@@ -56,26 +57,29 @@ class _AppViewState extends State<AppView> {
         navigatorKey: _navigatorKey,
         builder: (context, child) {
           ScreenUtil.setContext(context);
-          return BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              switch (state.status) {
-                case AuthStatus.authenticated:
-                  _navigator.pushAndRemoveUntil<void>(
-                    HomeScreen.route(),
-                    (route) => false,
-                  );
-                  break;
-                case AuthStatus.unauthenticated:
-                  _navigator.pushAndRemoveUntil<void>(
-                    LoginScreen.route(),
-                    (route) => false,
-                  );
-                  break;
-                default:
-                  break;
-              }
-            },
-            child: child,
+          return ScrollConfiguration(
+            behavior: CustomScrollBehavior(),
+            child: BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                switch (state.status) {
+                  case AuthStatus.authenticated:
+                    _navigator.pushAndRemoveUntil<void>(
+                      HomeScreen.route(),
+                      (route) => false,
+                    );
+                    break;
+                  case AuthStatus.unauthenticated:
+                    _navigator.pushAndRemoveUntil<void>(
+                      LoginScreen.route(),
+                      (route) => false,
+                    );
+                    break;
+                  default:
+                    break;
+                }
+              },
+              child: child,
+            ),
           );
         },
         debugShowCheckedModeBanner: false,

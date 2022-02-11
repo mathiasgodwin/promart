@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 import 'package:promart/src/features/promart/presentation/cubit/categories/categories_cubit.dart';
@@ -71,30 +72,30 @@ class HomeScreen extends StatelessWidget {
         ],
         child: ListView(
           shrinkWrap: true,
-          children: const <Widget>[
+          children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 20, left: 10),
+              padding: EdgeInsets.only(top: 20.w, left: 10.w),
               child: Text(
                 'TOP CATEGORIES',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
               ),
             ),
-            SizedBox(height: 10),
-            _AvailableCategories(),
-            SizedBox(height: 25),
-            _ProductAdsCarouselSmall(),
-            SizedBox(height: 25),
-            _RowDivider('Electronics'),
-            SizedBox(height: 10),
-            ProductByCategoryName('electronics'),
+            SizedBox(height: 10.w),
+            const _AvailableCategories(),
+            SizedBox(height: 25.w),
+            const _ProductAdsCarouselSmall(),
+            SizedBox(height: 25.w),
+            const _RowDivider('Electronics'),
+            SizedBox(height: 10.w),
+            const ProductByCategoryName('electronics'),
             //
-            SizedBox(height: 10),
-            _RowDivider('New Arrival'),
-            SizedBox(height: 10),
-            _ProductsAdsCarouselBig(),
-            SizedBox(height: 25),
+            SizedBox(height: 10.w),
+            const _RowDivider('New Arrival'),
+            SizedBox(height: 10.w),
+            const _ProductsAdsCarouselBig(),
+            SizedBox(height: 25.w),
 
-            _AllProductsGrid(),
+            const _AllProductsGrid(),
 
             //
           ],
@@ -107,30 +108,18 @@ class HomeScreen extends StatelessWidget {
 // We're are only going to display some images without considering the real
 // categories text gotten from the api call yet, but the call should happen
 // This setting is only for learning purpose. Yeah, just practicing :)
-class _AvailableCategories extends StatefulWidget {
+class _AvailableCategories extends StatelessWidget {
   const _AvailableCategories({Key? key}) : super(key: key);
-
-  @override
-  State<_AvailableCategories> createState() => _AvailableCategoriesState();
-}
-
-class _AvailableCategoriesState extends State<_AvailableCategories> {
-  bool _reload = true;
-
-  // Disable reloading if data is gotten once.
-  void loadAnddoNotReload(CategoriesCubit categoriesCubit) {
-    if (_reload) {
-      categoriesCubit.getCategories();
-    } else if (!_reload) {}
-  }
 
   @override
   Widget build(BuildContext context) {
     final categories = BlocProvider.of<CategoriesCubit>(context);
     final _w = MediaQuery.of(context).size.width;
+    categories.getCategories();
 
-    loadAnddoNotReload(categories);
     return BlocConsumer<CategoriesCubit, CategoriesState>(
+      buildWhen: (prev, current) => prev != current,
+      listenWhen: (prev, current) => prev != current,
       listener: (context, state) {
         if (state is CategoriesLoading) {
         } else if (state is CategoriesError) {
@@ -139,11 +128,7 @@ class _AvailableCategoriesState extends State<_AvailableCategories> {
             ..showSnackBar(SnackBar(
                 content:
                     Text(state.errorMessage ?? 'Could not load, try again')));
-        } else if (state is CategoriesLoaded) {
-          setState(() {
-            _reload = false;
-          });
-        }
+        } else if (state is CategoriesLoaded) {}
       },
       builder: (context, state) {
         if (state is CategoriesLoaded) {

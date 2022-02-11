@@ -30,21 +30,24 @@ class RecoverPasswordForm extends StatelessWidget {
                 content: Text(state.errorMessage ?? 'Could not send email.')));
         }
       },
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+      child: ListView(
+        physics: const ClampingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.4.sh),
+        children: <Widget>[
+          Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Text('Forget Password',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 25.sp,
-                    )),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.0),
+                child: Row(
+                  children: [
+                    Text('Forget Password',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 25.sp,
+                        )),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 20.w,
@@ -53,13 +56,14 @@ class RecoverPasswordForm extends StatelessWidget {
               Center(child: _SubmitButton()),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
 }
 
 class _EmailInput extends StatelessWidget {
+  final fontSize = 14;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RecoverPasswordCubit, RecoverPasswordState>(
@@ -69,11 +73,15 @@ class _EmailInput extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: SizedBox(
             child: TextField(
+              scrollPadding: EdgeInsets.only(
+                  bottom:
+                      MediaQuery.of(context).viewInsets.bottom + fontSize * 4),
               key: const Key('recoverpasswordForm_emailInput_textField'),
               onChanged: (email) =>
                   context.read<RecoverPasswordCubit>().emailChanged(email),
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
+                isDense: true,
                 prefixIcon: Padding(
                   padding: EdgeInsetsDirectional.only(start: 12.w),
                   child: Icon(
@@ -82,6 +90,7 @@ class _EmailInput extends StatelessWidget {
                   ),
                 ),
                 labelText: 'Email',
+                floatingLabelBehavior: FloatingLabelBehavior.never,
                 helperText: '',
                 errorText: state.email.invalid ? 'invalid email' : null,
               ),
