@@ -28,7 +28,6 @@ class RecoverPasswordCubit extends Cubit<RecoverPasswordState> {
     final email = Email.dirty(value);
 
     final textEmail = value;
-    print(value);
     emit(
       state.copyWith(
         email: email,

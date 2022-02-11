@@ -4,16 +4,19 @@ import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 import 'package:promart/src/features/promart/presentation/cubit/categories/categories_cubit.dart';
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
+import 'package:promart/src/features/promart/presentation/cubit/promart_catalogue/promart_catalogue_cubit.dart';
 
 import 'package:promart/src/features/promart/presentation/cubit/single_product/single_product_cubit.dart';
+import 'package:promart/src/features/promart/presentation/pages/product_details_screen.dart';
+import 'package:promart/src/features/promart/presentation/widgets/products_listview.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-static Route route() {
-    return MaterialPageRoute<void>(
-        builder: (_) => const HomeScreen());
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => const HomeScreen());
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +65,9 @@ static Route route() {
           BlocProvider<SingleProductCubit>(
             create: (_) => SingleProductCubit(),
           ),
+          BlocProvider<PromartCatalogCubit>(
+            create: (_) => PromartCatalogCubit(),
+          ),
         ],
         child: ListView(
           shrinkWrap: true,
@@ -80,12 +86,15 @@ static Route route() {
             SizedBox(height: 25),
             _RowDivider('Electronics'),
             SizedBox(height: 10),
-            _ProductByCategoryName('electronics'),
+            ProductByCategoryName('electronics'),
             //
             SizedBox(height: 10),
             _RowDivider('New Arrival'),
             SizedBox(height: 10),
             _ProductsAdsCarouselBig(),
+            SizedBox(height: 25),
+
+            _AllProductsGrid(),
 
             //
           ],
@@ -95,9 +104,9 @@ static Route route() {
   }
 }
 
-// We're are only going to disable some images without considering the real
+// We're are only going to display some images without considering the real
 // categories text gotten from the api call yet, but the call should happen
-// This setting only for learning purpose.
+// This setting is only for learning purpose. Yeah, just practicing :)
 class _AvailableCategories extends StatefulWidget {
   const _AvailableCategories({Key? key}) : super(key: key);
 
@@ -119,7 +128,6 @@ class _AvailableCategoriesState extends State<_AvailableCategories> {
   Widget build(BuildContext context) {
     final categories = BlocProvider.of<CategoriesCubit>(context);
     final _w = MediaQuery.of(context).size.width;
-    final _h = MediaQuery.of(context).size.height;
 
     loadAnddoNotReload(categories);
     return BlocConsumer<CategoriesCubit, CategoriesState>(
@@ -329,7 +337,6 @@ class _ProductAdsCarouselSmall extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: GFImageOverlay(
-              // colorFilter: ColorFilter.mode(Colors.transparent, BlendMode.colorBurn),
               height: 150,
               image: AssetImage('assets/images/cat3.jpg'),
               borderRadius: BorderRadius.all(
@@ -410,7 +417,6 @@ class _ProductsAdsCarouselBig extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: GFImageOverlay(
-              // colorFilter: ColorFilter.mode(Colors.transparent, BlendMode.colorBurn),
               height: 200,
               image: AssetImage('assets/images/cat3.jpg'),
               borderRadius: BorderRadius.all(
@@ -476,9 +482,9 @@ class _ProductsAdsCarouselBig extends StatelessWidget {
 }
 
 class _RowDivider extends StatelessWidget {
-  final String text;
-
   const _RowDivider(this.text, {Key? key}) : super(key: key);
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -502,164 +508,159 @@ class _RowDivider extends StatelessWidget {
   }
 }
 
-class _ProductByCategoryName extends StatefulWidget {
-  final String category;
-  const _ProductByCategoryName(this.category, {Key? key}) : super(key: key);
+class _AllProductsGrid extends StatefulWidget {
+  const _AllProductsGrid({Key? key}) : super(key: key);
 
   @override
-  State<_ProductByCategoryName> createState() => _ProductByCategoryNameState();
+  State<_AllProductsGrid> createState() => _AllProductsGridState();
 }
 
-class _ProductByCategoryNameState extends State<_ProductByCategoryName> {
+class _AllProductsGridState extends State<_AllProductsGrid> {
   bool _reload = true;
 
   // Disable reloading if data is gotten once.
   void loadAnddoNotReload(
-    ProductsByCategoriesCubit productsByCategoriesCubit,
+    PromartCatalogCubit promartCatalogCubit,
   ) {
     if (_reload) {
-      productsByCategoriesCubit.getProductsByCategory(widget.category);
+      promartCatalogCubit.loadCatalog();
     } else if (!_reload) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    final productsByCategoriesCubit =
-        BlocProvider.of<ProductsByCategoriesCubit>(context);
+    final promartCatalogCubit = BlocProvider.of<PromartCatalogCubit>(context);
     final _w = MediaQuery.of(context).size.width;
-    loadAnddoNotReload(productsByCategoriesCubit);
-
-    return BlocConsumer<ProductsByCategoriesCubit, ProductsByCategoriesState>(
-      listener: (context, state) {
-        if (state is ProductsByCategoriesError) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content:
-                    Text(state.errorMessage ?? 'Could not load, try again')));
-        } else if (state is ProductsByCategoriesLoaded) {
-          setState(() {
-            _reload = false;
-          });
-        }
-      },
-      builder: (context, state) {
-        if (state is ProductsByCategoriesLoaded) {
-          return Container(
-            color: Colors.white,
-            margin: const EdgeInsets.only(left: 8, right: 8),
-            height: 270,
-            width: double.infinity,
-            child: ListView.builder(
-              itemCount: state.products.data.length,
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                var item = state.products.data[index];
-                return SizedBox(
-                  width: _w * 0.5,
-                  child: GFCard(
-                    image: Image.network(
-                      item.image,
-                      width: 150,
-                      height: 150,
-                    ),
-                    showImage: true,
-                    title: GFListTile(
-                      padding: const EdgeInsets.all(0.0),
-                      margin: const EdgeInsets.symmetric(horizontal: 0.0),
-                      title: Text(
+    loadAnddoNotReload(promartCatalogCubit);
+    return BlocConsumer<PromartCatalogCubit, PromartCatalogState>(
+        listener: (context, state) {
+      if (state is PromartCatalogError) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+              content:
+                  Text(state.errorMessage ?? 'Could not load, try again')));
+      } else if (state is PromartCatalogLoaded) {
+        setState(() {
+          _reload = false;
+          print('Will not reload');
+        });
+      }
+    }, builder: (context, state) {
+      if (state is PromartCatalogLoaded) {
+        return GridView.builder(
+          physics: const ScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, childAspectRatio: 0.8),
+          itemCount: state.catalog.data.length,
+          itemBuilder: (BuildContext context, int index) {
+            var item = state.catalog.data[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push<void>(ProductDetailsScreen(item).route());
+              },
+              child: GFCard(
+                padding: EdgeInsets.all(0),
+                image: Image.network(
+                  item.image,
+                  width: 150,
+                  height: 100,
+                ),
+                showImage: true,
+                title: GFListTile(
+                  padding: const EdgeInsets.all(0.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 0.0),
+                  title: Text(
+                    item.title,
+                    maxLines: 1,
+                    softWrap: true,
+                    style: const TextStyle(
+                        overflow: TextOverflow.clip,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subTitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
                         item.title,
                         maxLines: 1,
                         softWrap: true,
                         style: const TextStyle(
+                            fontSize: 12,
                             overflow: TextOverflow.clip,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.w400),
                       ),
-                      subTitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            item.title,
-                            maxLines: 1,
-                            softWrap: true,
-                            style: const TextStyle(
-                                fontSize: 12,
-                                overflow: TextOverflow.clip,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          Text(
-                            '\$${item.price.toString()}',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        '\$${item.price.toString()}',
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                );
-              },
-            ),
-          );
-        } else if (state is ProductsByCategoriesLoading) {
-          return Center(
-              child: GFShimmer(
-                  child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 56,
-                  height: 46,
-                  color: Colors.white,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      color: Colors.white,
-                      height: 8,
-                      width: double.infinity,
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      color: Colors.white,
-                      height: 8,
-                      width: _w * 0.5,
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      color: Colors.white,
-                      height: 8,
-                      width: _w * 0.25,
-                    ),
-                  ],
-                ))
-              ],
-            ),
-          )));
-        } else if (state is ProductsByCategoriesError) {
-          return Center(
-              child: GFIconButton(
-                  color: Colors.purple,
-                  shape: GFIconButtonShape.circle,
-                  size: GFSize.LARGE,
-                  icon: const Icon(Icons.replay_circle_filled_rounded),
-                  onPressed: () {
-                    productsByCategoriesCubit
-                        .getProductsByCategory(widget.category);
-                  }));
-        }
-        return const SizedBox();
-      },
-    );
+              ),
+            );
+          },
+        );
+      } else if (state is PromartCatalogLoading) {
+        return Center(
+            child: GFShimmer(
+                child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: 56,
+                height: 46,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    color: Colors.white,
+                    height: 8,
+                    width: double.infinity,
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    color: Colors.white,
+                    height: 8,
+                    width: _w * 0.5,
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    color: Colors.white,
+                    height: 8,
+                    width: _w * 0.25,
+                  ),
+                ],
+              ))
+            ],
+          ),
+        )));
+      } else if (state is PromartCatalogError) {
+        return Center(
+            child: GFIconButton(
+                color: Colors.purple,
+                shape: GFIconButtonShape.circle,
+                size: GFSize.LARGE,
+                icon: const Icon(Icons.replay_circle_filled_rounded),
+                onPressed: () {
+                  promartCatalogCubit.loadCatalog();
+                }));
+      }
+      return const SizedBox();
+    });
   }
 }

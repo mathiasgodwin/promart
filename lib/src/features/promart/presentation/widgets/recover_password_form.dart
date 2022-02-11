@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:formz/formz.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:promart/src/features/promart/presentation/cubit/recover_password/recover_password_cubit.dart';
@@ -31,22 +32,22 @@ class RecoverPasswordForm extends StatelessWidget {
       },
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Text('Forget Password',
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      fontSize: 25,
+                      fontSize: 25.sp,
                     )),
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 20.w,
               ),
               _EmailInput(),
               Center(child: _SubmitButton()),
@@ -65,7 +66,7 @@ class _EmailInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: SizedBox(
             child: TextField(
               key: const Key('recoverpasswordForm_emailInput_textField'),
@@ -73,11 +74,11 @@ class _EmailInput extends StatelessWidget {
                   context.read<RecoverPasswordCubit>().emailChanged(email),
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                prefixIcon: const Padding(
-                  padding: EdgeInsetsDirectional.only(start: 12.0),
+                prefixIcon: Padding(
+                  padding: EdgeInsetsDirectional.only(start: 12.w),
                   child: Icon(
                     Icons.mail_outline,
-                    size: 16,
+                    size: 16.sp,
                   ),
                 ),
                 labelText: 'Email',
@@ -99,16 +100,16 @@ class _SubmitButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
-            ? const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: CircularProgressIndicator(),
+            ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: const CircularProgressIndicator(),
               )
             : SizedBox(
                 width: double.infinity,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: GFButton(
-                    size: 45,
+                    size: 45.w,
                     onPressed: state.status.isValidated
                         ? () => context
                             .read<RecoverPasswordCubit>()

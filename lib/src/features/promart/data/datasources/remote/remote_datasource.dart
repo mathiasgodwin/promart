@@ -436,9 +436,8 @@ class RemoteDataSource implements IRemoteDataSource {
     try {
       final response = await _client.fetch(
         RequestOptions(
-          path: limit == null
-              ? 'https://fakestoreapi.com/products?sort=$sort'
-              : 'https://fakestoreapi.com/products?sort=$sort&limit=$limit',
+          path:
+              'https://fakestoreapi.com/products?sort=$sort&limit=${limit ?? 20}',
           method: 'GET',
           sendTimeout: 30000,
           receiveTimeout: 30000,
@@ -460,7 +459,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('Could not load available products');
       }
     }
   }
@@ -505,7 +504,7 @@ class RemoteDataSource implements IRemoteDataSource {
         RequestOptions(
           path: limit == null
               ? 'https://fakestoreapi.com/products/category/$category?sort=$sort'
-              : 'https://fakestoreapi.com/products/category/$category??sort=$sort&limit=$limit',
+              : 'https://fakestoreapi.com/products/category/$category?sort=$sort&limit=$limit',
           method: 'GET',
           sendTimeout: 30000,
           receiveTimeout: 30000,
@@ -527,7 +526,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('Could not send request');
       }
     }
   }
@@ -559,7 +558,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('Could not send request, check connection');
       }
     }
   }
@@ -592,7 +591,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('Could not send request');
       }
     }
   }
@@ -624,7 +623,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('Unable to send request');
       }
     }
   }
@@ -656,7 +655,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('The request was unsuccessful, try again!');
       }
     }
   }
@@ -723,7 +722,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('Could not make request');
       }
     }
   }
@@ -756,7 +755,7 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException();
+        throw const GetRemoteException('Could not send request');
       }
     }
   }

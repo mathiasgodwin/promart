@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:formz/formz.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/presentation/cubit/recover_password/recover_password_cubit.dart';
@@ -30,42 +31,42 @@ class NewPasswordForm extends StatelessWidget {
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 200, left: 20, right: 20),
+                padding:  EdgeInsets.only(top: 200.w, left: 20.w, right: 20.w),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                     Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text('New Credentials',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 25)),
+                              fontWeight: FontWeight.bold, fontSize: 25.sp)),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                     Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text(
                         'Your Identity has been verified!',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                            fontWeight: FontWeight.bold, fontSize: 15.w),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                     Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text(
                         'Set your new password',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                            fontWeight: FontWeight.bold, fontSize: 15.sp),
                       ),
                     ),
-                    const SizedBox(
-                      height: 40,
+                     SizedBox(
+                      height: 40.w,
                     ),
                     _PasswordInput(),
                     _ConfirmPasswordInput(),
-                    const SizedBox(height: 5),
+                     SizedBox(height: 5.w),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding:  EdgeInsets.symmetric(horizontal: 16.w),
                       child: _LoginButton(),
                     ),
                   ],
@@ -86,7 +87,7 @@ class _PasswordInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding:  EdgeInsets.symmetric(horizontal: 16.w),
           child: TextField(
             key: const Key('loginForm_emailInput_textField'),
             onChanged: (password) =>
@@ -94,11 +95,11 @@ class _PasswordInput extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             obscureText: true,
             decoration: InputDecoration(
-              prefixIcon: const Padding(
-                padding: EdgeInsetsDirectional.only(start: 12.0),
+              prefixIcon:  Padding(
+                padding: EdgeInsetsDirectional.only(start: 12.0.w),
                 child: Icon(
                   Icons.lock_rounded,
-                  size: 16,
+                  size: 16.w,
                 ),
               ),
               labelText: 'New Password',
@@ -121,7 +122,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
           previous.confirmedPassword != current.confirmedPassword,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding:  EdgeInsets.symmetric(horizontal: 16.w),
           child: TextField(
             key: const Key('signUpForm_confirmedPasswordInput_textField'),
             onChanged: (confirmPassword) => context
@@ -129,11 +130,11 @@ class _ConfirmPasswordInput extends StatelessWidget {
                 .confirmedPasswordChanged(confirmPassword),
             obscureText: true,
             decoration: InputDecoration(
-              prefixIcon: const Padding(
-                padding: EdgeInsetsDirectional.only(start: 12.0),
+              prefixIcon:  Padding(
+                padding: EdgeInsetsDirectional.only(start: 12.0.w),
                 child: Icon(
                   Icons.lock_rounded,
-                  size: 16,
+                  size: 16.w,
                 ),
               ),
               labelText: 'confirm password',
@@ -161,10 +162,10 @@ class _LoginButton extends StatelessWidget {
                 fullWidthButton: true,
                 color: Colors.purple,
                 onPressed: () {
-                  Navigator.of(context).push(NewPaswordSuccessful.route());
+                  Navigator.of(context).push<void>(NewPaswordSuccessful.route());
                 },
                 text: 'Update',
-                size: 60);
+                size: 60.w);
       },
     );
   }

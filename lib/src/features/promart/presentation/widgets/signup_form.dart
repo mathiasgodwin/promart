@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:formz/formz.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
@@ -41,51 +42,54 @@ class SignUpForm extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Text('Welcome!',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.sp)),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Text(
                             'Create a new account.',
-                            style: TextStyle(fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 14.sp),
                           ),
                         ),
-                        SizedBox(height: normalHeight(context) * 0.04),
+                        SizedBox(height: 0.04.sh),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: _EmailInput(),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: _PasswordInput(),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: _ConfirmPasswordInput(),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: normalHeight(context) * 0.02,
+                    height: 0.02.sh,
                   ),
                   _SignUpButton(),
                   SizedBox(
-                    height: normalHeight(context) * 0.02,
+                    height: 0.02.sh,
                   ),
-                  const Text(
+                  Text(
                     'Or Continue with',
-                    style: TextStyle(fontWeight: FontWeight.w400),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp),
                   ),
                 ],
               ),
@@ -108,11 +112,11 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            prefixIcon: const Padding(
-              padding: EdgeInsetsDirectional.only(start: 12.0),
+            prefixIcon: Padding(
+              padding: EdgeInsetsDirectional.only(start: 12.w),
               child: Icon(
                 Icons.mail_outline,
-                size: 16,
+                size: 16.sp,
               ),
             ),
             labelText: 'email',
@@ -137,11 +141,11 @@ class _PasswordInput extends StatelessWidget {
               context.read<SignUpCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
-            prefixIcon: const Padding(
-              padding: EdgeInsetsDirectional.only(start: 12.0),
+            prefixIcon: Padding(
+              padding: EdgeInsetsDirectional.only(start: 12.w),
               child: Icon(
                 Icons.lock_rounded,
-                size: 16,
+                size: 16.sp,
               ),
             ),
             labelText: 'password',
@@ -169,11 +173,11 @@ class _ConfirmPasswordInput extends StatelessWidget {
               .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
-            prefixIcon: const Padding(
-              padding: EdgeInsetsDirectional.only(start: 12.0),
+            prefixIcon: Padding(
+              padding: EdgeInsetsDirectional.only(start: 12.w),
               child: Icon(
                 Icons.lock_rounded,
-                size: 16,
+                size: 16.sp,
               ),
             ),
             labelText: 'confirm password',
@@ -203,7 +207,7 @@ class _AuthButton extends StatelessWidget {
             width: _w / 2,
             child: GFButton(
               borderShape: const BeveledRectangleBorder(),
-              size: 75,
+              size: 75.w,
               padding: const EdgeInsets.all(0),
               color: Colors.blue,
               onPressed: () {},
@@ -214,7 +218,7 @@ class _AuthButton extends StatelessWidget {
             width: _w / 2,
             child: GFButton(
               borderShape: const BeveledRectangleBorder(),
-              size: 75,
+              size: 75.w,
               padding: const EdgeInsets.all(0),
               color: Colors.red,
               onPressed: () {},
@@ -242,7 +246,7 @@ class _SignUpButton extends StatelessWidget {
                     ? () => context.read<SignUpCubit>().signUpFormSubmitted()
                     : () {},
                 text: 'Signup',
-                size: 60);
+                size: 60.w);
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:formz/formz.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/presentation/cubit/recover_password/recover_password_cubit.dart';
@@ -19,26 +20,26 @@ class VerifyCodeForm extends StatelessWidget {
       },
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Text('Verification Code',
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      fontSize: 25,
+                      fontSize: 25.sp,
                     )),
               ),
-              const SizedBox(
-                height: 12,
+              SizedBox(
+                height: 12.w,
               ),
               _TextWithEmail(),
-              const SizedBox(
-                height: 30,
+              SizedBox(
+                height: 30.w,
               ),
               _CodeInput(),
               Center(child: _SubmitButton()),
@@ -56,9 +57,9 @@ class _SubmitButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: GFButton(
-          size: 45,
+          size: 45.w,
           onPressed: () {
             Navigator.of(context).push<void>(NewPasswordScreen.route());
           },
@@ -77,14 +78,14 @@ class _CodeInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.code != current.code,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: TextField(
             textAlign: TextAlign.center,
-            cursorHeight: 40,
+            cursorHeight: 40.w,
             cursorColor: Colors.black,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w900,
-              fontSize: 25,
+              fontSize: 25.w,
             ),
             key: const Key('verifycodeForm_emailInput_textField'),
             onChanged: (code) {
@@ -110,14 +111,14 @@ class _TextWithEmail extends StatelessWidget {
       buildWhen: (previous, current) => previous.code != current.code,
       builder: (context, state) {
         // print(context.read<RecoverPasswordCubit>().state.textEmail);
-        final String email = state.textEmail ?? '';
-        return const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        // final String email = state.textEmail ?? '';
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
             'Please type the verification code sent to the email',
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              fontSize: 15,
+              fontSize: 15.sp,
             ),
           ),
         );
