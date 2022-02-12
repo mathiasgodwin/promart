@@ -1,26 +1,29 @@
 part of 'promart_catalogue_cubit.dart';
 
-abstract class PromartCatalogState extends Equatable {
-  const PromartCatalogState();
+enum PromartCatalogStatus { loading, loaded, failure }
 
-  @override
-  List<Object> get props => [];
-}
-
-class PromartCatalogLoading extends PromartCatalogState {}
-
-class PromartCatalogLoaded extends PromartCatalogState {
-  const PromartCatalogLoaded(this.catalog);
-
-  // We have products inside catalogues
-  // So we're using the product model.
-  final AllProductModel catalog;
-
-  @override
-  List<Object> get props => [catalog];
-}
-
-class PromartCatalogError extends PromartCatalogState {
+class PromartCatalogState extends Equatable {
+  final PromartCatalogStatus status;
+  final AllProductModel? catalog;
   final String? errorMessage;
-  const PromartCatalogError(this.errorMessage);
+
+  const PromartCatalogState(
+      {this.status = PromartCatalogStatus.loading,
+      this.catalog,
+      this.errorMessage});
+
+  @override
+  List<Object?> get props => [status, catalog, errorMessage];
+
+  PromartCatalogState copyWith({
+    PromartCatalogStatus? status,
+    AllProductModel? catalog,
+    String? errorMessage,
+  }) {
+    return PromartCatalogState(
+      status: status ?? this.status,
+      catalog: catalog ?? this.catalog,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
 }

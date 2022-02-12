@@ -1,26 +1,28 @@
 part of 'categories_cubit.dart';
 
-abstract class CategoriesState extends Equatable {
-  const CategoriesState();
+enum CategoriesStatus { loading, loaded, failure }
 
-  @override
-  List<Object> get props => [];
-}
-
-class CategoriesLoading extends CategoriesState {
-  
-}
-
-class CategoriesLoaded extends CategoriesState {
-  const CategoriesLoaded(this.categories);
-
+class CategoriesState extends Equatable {
+  final CategoriesStatus status;
   final AllCategoryModel categories;
+  final String errorMessage;
+  const CategoriesState({
+    this.status = CategoriesStatus.loading,
+    this.categories = AllCategoryModel.empty,
+    this.errorMessage = '',
+  });
+
   @override
-  List<Object> get props => [categories];
-}
+  List<Object> get props => [status, categories, errorMessage];
 
-class CategoriesError extends CategoriesState {
-  final String? errorMessage;
-
-  const CategoriesError(this.errorMessage);
+  CategoriesState copyWith({
+    CategoriesStatus? status,
+    AllCategoryModel? categories,
+    String? errorMessage,
+  }) {
+    return CategoriesState(
+        status: status ?? this.status,
+        categories: categories ?? this.categories,
+        errorMessage: errorMessage ?? this.errorMessage);
+  }
 }

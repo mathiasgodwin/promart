@@ -11,6 +11,7 @@ environment:
 dependencies:
   animated_check: ^1.0.5
   bloc: ^8.0.2
+  cached_network_image: ^3.2.0
   connectivity_plus: ^2.2.0
   cupertino_icons: ^1.0.2
   dio: ^4.0.4

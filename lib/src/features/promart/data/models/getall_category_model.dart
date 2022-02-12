@@ -8,11 +8,14 @@ import 'package:equatable/equatable.dart';
 
 class AllCategoryModel extends Equatable {
   // ignore: prefer_const_constructors_in_immutables
-  AllCategoryModel({
+  const AllCategoryModel({
     required this.data,
   });
 
   final List<String> data;
+
+  /// Empty model to represent empty state.
+  static const empty = AllCategoryModel(data: []);
 
   factory AllCategoryModel.fromJson(String str) =>
       AllCategoryModel.fromMap(json.decode(str) as List);

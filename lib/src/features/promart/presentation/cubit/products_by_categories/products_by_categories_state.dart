@@ -1,24 +1,29 @@
 part of 'products_by_categories_cubit.dart';
 
-abstract class ProductsByCategoriesState extends Equatable {
-  const ProductsByCategoriesState();
+enum ProductByCategoriesStatus { loading, loaded, failure }
 
-  @override
-  List<Object> get props => [];
-}
-
-class ProductsByCategoriesLoading extends ProductsByCategoriesState {}
-
-class ProductsByCategoriesLoaded extends ProductsByCategoriesState {
-  const ProductsByCategoriesLoaded(this.products);
-
-  final AllProductModel products;
-
-  @override
-  List<Object> get props => [products];
-}
-
-class ProductsByCategoriesError extends ProductsByCategoriesState {
+class ProductsByCategoriesState extends Equatable {
+  final ProductByCategoriesStatus status;
+  final AllProductModel? products;
   final String? errorMessage;
-  const ProductsByCategoriesError(this.errorMessage);
+
+  const ProductsByCategoriesState(
+      {this.status = ProductByCategoriesStatus.loading,
+      this.products,
+      this.errorMessage});
+
+  @override
+  List<Object?> get props => [status, products, errorMessage];
+
+  ProductsByCategoriesState copyWith({
+    ProductByCategoriesStatus? status,
+    AllProductModel? products,
+    String? errorMessage,
+  }) {
+    return ProductsByCategoriesState(
+      status: status ?? this.status,
+      products: products ?? this.products,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
 }

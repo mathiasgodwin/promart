@@ -9,20 +9,25 @@ import 'package:promart/src/features/promart/domain/usecases/all_product_usecase
 part 'promart_catalogue_state.dart';
 
 class PromartCatalogCubit extends Cubit<PromartCatalogState> {
-  PromartCatalogCubit() : super(PromartCatalogLoading());
+  final PromartRepository repository;
+  PromartCatalogCubit({required this.repository})
+      : super(const PromartCatalogState());
 
-  final _repository = PromartRepository(dataSource: RemoteDataSource());
-  late final _getAllCatalog = GetAllProductUsecase(repository: _repository);
+  late final _getAllCatalog = GetAllProductUsecase(repository: repository);
 
   void loadCatalog({String? sort, String? limit}) async {
-    emit(PromartCatalogLoading());
+    emit(state.copyWith(status: PromartCatalogStatus.loading));
     try {
       final catalog = await _getAllCatalog(sort: sort, limit: limit);
-      emit(PromartCatalogLoaded(catalog!));
+      emit(state.copyWith(
+          status: PromartCatalogStatus.loaded, catalog: catalog));
     } on GetRemoteException catch (e) {
-      emit(PromartCatalogError(e.message));
+      emit(state.copyWith(
+          status: PromartCatalogStatus.failure, errorMessage: e.message));
     } catch (e) {
-      emit(PromartCatalogError(e.toString()));
+      emit(state.copyWith(
+          status: PromartCatalogStatus.failure,
+          errorMessage: 'Request could not be made, try again'));
     }
   }
 }

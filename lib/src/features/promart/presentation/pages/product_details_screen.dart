@@ -237,8 +237,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 300.w),
                 child: BlocProvider(
-                  create: (context) => ProductsByCategoriesCubit(),
-                  child: const ProductByCategoryName('electronics'),
+                  create: (context) => ProductsByCategoriesCubit(repository: RepositoryProvider.of<PromartRepository>(context))
+                  
+                  ..getProductsByCategory('electronics'),
+                  child: const ProductByCategoryName(category: 'electronics'),
                 ),
               ),
             )

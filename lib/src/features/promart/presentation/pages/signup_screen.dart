@@ -14,12 +14,9 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: Padding(
-        padding: const EdgeInsets.all(0),
-        child: BlocProvider<SignUpCubit>(
-          create: (_) => SignUpCubit(),
-          child: const SignUpForm(),
-        ),
+      body: BlocProvider<SignUpCubit>(
+        create: (_) => SignUpCubit(),
+        child: const SignUpForm(),
       ),
     );
   }

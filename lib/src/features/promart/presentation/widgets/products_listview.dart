@@ -2,53 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:promart/src/core/utils/screen/screen_util.dart';
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
 import 'package:promart/src/features/promart/presentation/pages/product_details_screen.dart';
 
-class ProductByCategoryName extends StatefulWidget {
-  const ProductByCategoryName(this.category, {Key? key}) : super(key: key);
-
-  final String category;
-
-  @override
-  State<ProductByCategoryName> createState() => ProductByCategoryNameState();
-}
-
-class ProductByCategoryNameState extends State<ProductByCategoryName> {
-  bool _reload = true;
-
-  // Disable reloading if data is gotten once.
-  void loadAnddoNotReload(
-    ProductsByCategoriesCubit productsByCategoriesCubit,
-  ) {
-    if (_reload) {
-      productsByCategoriesCubit.getProductsByCategory(widget.category);
-    } else if (!_reload) {}
-  }
+class ProductByCategoryName extends StatelessWidget {
+  final String? category;
+  const ProductByCategoryName({required this.category, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final productsByCategoriesCubit =
+    final double _w = size(context).width;
+    final productByCategoryName =
         BlocProvider.of<ProductsByCategoriesCubit>(context);
-    final _w = MediaQuery.of(context).size.width;
-    loadAnddoNotReload(productsByCategoriesCubit);
 
     return BlocConsumer<ProductsByCategoriesCubit, ProductsByCategoriesState>(
+      buildWhen: (prev, current) => prev.products != current.products,
       listener: (context, state) {
-        if (state is ProductsByCategoriesError) {
+        if (state.status == ProductByCategoriesStatus.failure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
                 content:
                     Text(state.errorMessage ?? 'Could not load, try again')));
-        } else if (state is ProductsByCategoriesLoaded) {
-          setState(() {
-            _reload = false;
-          });
-        }
+        } else if (state.status == ProductByCategoriesStatus.loading) {}
       },
       builder: (context, state) {
-        if (state is ProductsByCategoriesLoaded) {
+        if (state.status == ProductByCategoriesStatus.loaded) {
           return Container(
             color: Colors.white,
             margin: EdgeInsets.only(left: 8.w, right: 8.w),
@@ -56,11 +37,11 @@ class ProductByCategoryNameState extends State<ProductByCategoryName> {
             width: double.infinity,
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
-              itemCount: state.products.data.length,
+              itemCount: state.products!.data.length,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                var item = state.products.data[index];
+                var item = state.products!.data[index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context)
@@ -117,47 +98,49 @@ class ProductByCategoryNameState extends State<ProductByCategoryName> {
               },
             ),
           );
-        } else if (state is ProductsByCategoriesLoading) {
+        } else if (state.status == ProductByCategoriesStatus.loading) {
           return Center(
-              child: GFShimmer(
-                  child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 56,
-                  height: 46,
-                  color: Colors.white,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            child: GFShimmer(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
+                      width: 56,
+                      height: 46,
                       color: Colors.white,
-                      height: 8,
-                      width: double.infinity,
                     ),
-                    const SizedBox(height: 6),
-                    Container(
-                      color: Colors.white,
-                      height: 8,
-                      width: _w * 0.5,
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      color: Colors.white,
-                      height: 8,
-                      width: _w * 0.25,
-                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          height: 8,
+                          width: double.infinity,
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          color: Colors.white,
+                          height: 8,
+                          width: _w * 0.5,
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          color: Colors.white,
+                          height: 8,
+                          width: _w * 0.25,
+                        ),
+                      ],
+                    ))
                   ],
-                ))
-              ],
+                ),
+              ),
             ),
-          )));
-        } else if (state is ProductsByCategoriesError) {
+          );
+        } else if (state.status == ProductByCategoriesStatus.failure) {
           return Center(
               child: GFIconButton(
                   color: Colors.purple,
@@ -165,8 +148,7 @@ class ProductByCategoryNameState extends State<ProductByCategoryName> {
                   size: GFSize.LARGE,
                   icon: const Icon(Icons.replay_circle_filled_rounded),
                   onPressed: () {
-                    productsByCategoriesCubit
-                        .getProductsByCategory(widget.category);
+                    productByCategoryName.getProductsByCategory('electronics');
                   }));
         }
         return const SizedBox();

@@ -7,22 +7,27 @@ import 'package:promart/src/features/promart/domain/usecases/get_product_by_cate
 part 'products_by_categories_state.dart';
 
 class ProductsByCategoriesCubit extends Cubit<ProductsByCategoriesState> {
-  ProductsByCategoriesCubit() : super(ProductsByCategoriesLoading());
+  final PromartRepository repository;
+  ProductsByCategoriesCubit({required this.repository})
+      : super(const ProductsByCategoriesState());
 
-  final _repository = PromartRepository(dataSource: RemoteDataSource());
-  late final _getProducts = GetProductByCategory(repository: _repository);
+  late final _getProducts = GetProductByCategory(repository: repository);
 
   void getProductsByCategory(String category,
       {String? limit, String? sort}) async {
-    emit(ProductsByCategoriesLoading());
+    emit(state.copyWith(status: ProductByCategoriesStatus.loading));
     try {
       final product = await _getProducts(
           category: category, sort: sort ?? 'dsc', limit: limit ?? '20');
-      emit(ProductsByCategoriesLoaded(product!));
+      emit(state.copyWith(
+          status: ProductByCategoriesStatus.loaded, products: product));
     } on GetRemoteException catch (e) {
-      emit(ProductsByCategoriesError(e.message));
+      emit(state.copyWith(
+          status: ProductByCategoriesStatus.failure, errorMessage: e.message));
     } catch (e) {
-      emit(const ProductsByCategoriesError("Failed to Load"));
+      emit(state.copyWith(
+          status: ProductByCategoriesStatus.failure,
+          errorMessage: 'Request was not successful, try again'));
     }
   }
 }
