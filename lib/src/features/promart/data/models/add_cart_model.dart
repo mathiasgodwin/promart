@@ -7,14 +7,17 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:promart/src/features/promart/domain/entities/add_cart_entity.dart';
 
-class AddCartModel extends AddCartEntity {
+class AddCartModel extends Equatable {
   AddCartModel({
-    required this.data,
-  }) : super(userId: data.userId, product: data.products, date: data.date);
+    required this.userId,
+    required this.date,
+    required this.products,
+  });
 
-  final AddCartData data;
+  final int userId;
+  final DateTime date;
+  final List<AddCartProduct> products;
 
   factory AddCartModel.fromJson(String str) =>
       AddCartModel.fromMap(json.decode(str));
@@ -22,53 +25,20 @@ class AddCartModel extends AddCartEntity {
   String toJson() => json.encode(toMap());
 
   factory AddCartModel.fromMap(Map<String, dynamic> json) => AddCartModel(
-        data: AddCartData.fromMap(json["data"]),
-      );
-
-  Map<String, dynamic> toMap() => {
-        "data": data.toMap(),
-      };
-}
-
-class AddCartData extends Equatable {
-  AddCartData({
-    required this.id,
-    required this.userId,
-    required this.date,
-    required this.products,
-    required this.v,
-  });
-
-  final int id;
-  final int userId;
-  final DateTime date;
-  final List<AddCartProduct> products;
-  final int v;
-
-  factory AddCartData.fromJson(String str) =>
-      AddCartData.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory AddCartData.fromMap(Map<String, dynamic> json) => AddCartData(
-        id: json["id"],
         userId: json["userId"],
         date: DateTime.parse(json["date"]),
         products: List<AddCartProduct>.from(
             json["products"].map((x) => AddCartProduct.fromMap(x))),
-        v: json["__v"],
       );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
         "userId": userId,
         "date": date.toIso8601String(),
         "products": List<dynamic>.from(products.map((x) => x.toMap())),
-        "__v": v,
       };
 
   @override
-  List<Object?> get props => [id, userId, date, products, v];
+  List<Object?> get props => [ userId, date, products, ];
 }
 
 class AddCartProduct extends Equatable {

@@ -289,9 +289,7 @@ class RemoteDataSource implements IRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        String encodedResponse =
-            json.encode({'data': json.decode(response.data)});
-        return AddCartModel.fromJson(encodedResponse);
+        return AddCartModel.fromJson(response.data);
       } else {}
     } catch (e) {
       logger.e(e);
@@ -558,7 +556,8 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException('Could not send request, check connection');
+        throw const GetRemoteException(
+            'Could not send request, check connection');
       }
     }
   }
@@ -655,7 +654,8 @@ class RemoteDataSource implements IRemoteDataSource {
       if (e is DioError) {
         throw DioException();
       } else {
-        throw const GetRemoteException('The request was unsuccessful, try again!');
+        throw const GetRemoteException(
+            'The request was unsuccessful, try again!');
       }
     }
   }

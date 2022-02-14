@@ -26,6 +26,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: const <Widget>[
+            Expanded(
+                child: GFButton(
+              color: Colors.black,
+              onPressed: null,
+              text: 'ADD TO CART',
+            )),
+            Expanded(
+              child: GFButton(
+                color: Colors.purple,
+                onPressed: null,
+                text: 'BUY NOW',
+              ),
+            )
+          ],
+        ),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
@@ -237,9 +257,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 300.w),
                 child: BlocProvider(
-                  create: (context) => ProductsByCategoriesCubit(repository: RepositoryProvider.of<PromartRepository>(context))
-                  
-                  ..getProductsByCategory('electronics'),
+                  create: (context) => ProductsByCategoriesCubit(
+                      repository:
+                          RepositoryProvider.of<PromartRepository>(context))
+                    ..getProductsByCategory('electronics'),
                   child: const ProductByCategoryName(category: 'electronics'),
                 ),
               ),

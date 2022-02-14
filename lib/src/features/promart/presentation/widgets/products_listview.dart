@@ -14,8 +14,6 @@ class ProductByCategoryName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double _w = size(context).width;
-    final productByCategoryName =
-        BlocProvider.of<ProductsByCategoriesCubit>(context);
 
     return BlocConsumer<ProductsByCategoriesCubit, ProductsByCategoriesState>(
       buildWhen: (prev, current) => prev.products != current.products,
@@ -142,14 +140,18 @@ class ProductByCategoryName extends StatelessWidget {
           );
         } else if (state.status == ProductByCategoriesStatus.failure) {
           return Center(
-              child: GFIconButton(
-                  color: Colors.purple,
-                  shape: GFIconButtonShape.circle,
-                  size: GFSize.LARGE,
-                  icon: const Icon(Icons.replay_circle_filled_rounded),
-                  onPressed: () {
-                    productByCategoryName.getProductsByCategory('electronics');
-                  }));
+            child: GFIconButton(
+              color: Colors.purple,
+              shape: GFIconButtonShape.circle,
+              size: GFSize.LARGE,
+              icon: const Icon(Icons.replay_circle_filled_rounded),
+              onPressed: () {
+                context
+                    .read<ProductsByCategoriesCubit>()
+                    .getProductsByCategory('electronics');
+              },
+            ),
+          );
         }
         return const SizedBox();
       },

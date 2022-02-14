@@ -138,7 +138,7 @@ class _AvailableCategories extends StatelessWidget {
       builder: (context, state) {
         if (state.status == CategoriesStatus.loaded) {
           return const Padding(
-            padding:  EdgeInsets.only(left: 10),
+            padding: EdgeInsets.only(left: 10),
             child: _CategoriesScrollViewWidget(),
           );
         } else if (state.status == CategoriesStatus.loading) {
@@ -222,8 +222,7 @@ class _CategoriesScrollViewWidget extends StatelessWidget {
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage('assets/images/cat3.jpg')),
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                   ),
                   // Text(
@@ -262,12 +261,10 @@ class _CategoriesScrollViewWidget extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     decoration: const BoxDecoration(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                         image: DecorationImage(
                             fit: BoxFit.fill,
-                            image:
-                                AssetImage('assets/images/cat3.jpg'))),
+                            image: AssetImage('assets/images/cat3.jpg'))),
                   ),
                   // Text(
                   //   state.categories.data[2],
@@ -287,8 +284,7 @@ class _CategoriesScrollViewWidget extends StatelessWidget {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage('assets/images/cat3.jpg')),
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                   ),
                   // Text(
@@ -514,7 +510,6 @@ class _AllProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final promartCatalogCubit = BlocProvider.of<PromartCatalogCubit>(context);
     final _w = size(context).width;
     return BlocConsumer<PromartCatalogCubit, PromartCatalogState>(
         buildWhen: (prev, current) => prev.catalog != current.catalog,
@@ -580,7 +575,7 @@ class _AllProductsGrid extends StatelessWidget {
                     size: GFSize.LARGE,
                     icon: const Icon(Icons.replay_circle_filled_rounded),
                     onPressed: () {
-                      promartCatalogCubit.loadCatalog();
+                      context.read<PromartCatalogCubit>().loadCatalog();
                     }));
           }
           return const SizedBox();
