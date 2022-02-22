@@ -5,7 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:promart/src/configs/theme/theme.dart';
 import 'package:promart/src/features/promart/data/repositories/promart_repository.dart';
 import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
-import 'package:promart/src/features/promart/presentation/pages/home_screen.dart';
+import 'package:promart/src/features/promart/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:promart/src/features/promart/presentation/pages/catalog_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/splash_screen.dart';
 import 'package:promart/src/features/promart/presentation/widgets/scroll_behavior.dart';
@@ -25,10 +26,17 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
       value: _promartRespository,
-      child: BlocProvider(
-        create: (_) => AuthBloc(
-          promartRepository: _promartRespository,
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => AuthBloc(
+              promartRepository: _promartRespository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => CartBloc(),
+          ),
+        ],
         child: const AppView(),
       ),
     );
@@ -46,6 +54,7 @@ class _AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState get _navigator => _navigatorKey.currentState!;
+  // final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +73,7 @@ class _AppViewState extends State<AppView> {
                 switch (state.status) {
                   case AuthStatus.authenticated:
                     _navigator.pushAndRemoveUntil<void>(
-                      HomeScreen.route(),
+                      CatalogScreen.route(),
                       (route) => false,
                     );
                     break;

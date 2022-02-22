@@ -1,13 +1,13 @@
 part of 'categories_cubit.dart';
 
-enum CategoriesStatus { loading, loaded, failure }
+enum CategoriesStatus { initial, loading, loaded, failure }
 
 class CategoriesState extends Equatable {
   final CategoriesStatus status;
   final AllCategoryModel categories;
   final String errorMessage;
   const CategoriesState({
-    this.status = CategoriesStatus.loading,
+    this.status = CategoriesStatus.initial,
     this.categories = AllCategoryModel.empty,
     this.errorMessage = '',
   });

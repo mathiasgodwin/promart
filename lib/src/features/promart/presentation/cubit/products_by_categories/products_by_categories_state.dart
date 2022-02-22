@@ -1,6 +1,6 @@
 part of 'products_by_categories_cubit.dart';
 
-enum ProductByCategoriesStatus { loading, loaded, failure }
+enum ProductByCategoriesStatus {initial, loading, loaded, failure }
 
 class ProductsByCategoriesState extends Equatable {
   final ProductByCategoriesStatus status;
@@ -8,7 +8,7 @@ class ProductsByCategoriesState extends Equatable {
   final String? errorMessage;
 
   const ProductsByCategoriesState(
-      {this.status = ProductByCategoriesStatus.loading,
+      {this.status = ProductByCategoriesStatus.initial,
       this.products,
       this.errorMessage});
 

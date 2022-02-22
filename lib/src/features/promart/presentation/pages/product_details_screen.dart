@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/data/data.dart';
+import 'package:promart/src/features/promart/presentation/bloc/cart_bloc/cart_bloc.dart';
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
+import 'package:promart/src/features/promart/presentation/pages/cart_screen.dart';
 import 'package:promart/src/features/promart/presentation/widgets/products_listview.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -26,22 +28,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // ignore: avoid_unnecessary_containers
       bottomNavigationBar: Container(
         child: Row(
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const <Widget>[
-            Expanded(
-                child: GFButton(
+          children: <Widget>[
+            GFButton(
               color: Colors.black,
-              onPressed: null,
+              onPressed: () {
+                context
+                    .read<CartBloc>()
+                    .add(ProductAdded(product: widget.productData));
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(const SnackBar(
+                    content: Text('Item Added to Cart'),
+                    duration: Duration(seconds: 1),
+                  ));
+              },
               text: 'ADD TO CART',
-            )),
-            Expanded(
-              child: GFButton(
-                color: Colors.purple,
-                onPressed: null,
-                text: 'BUY NOW',
-              ),
+            ),
+            GFButton(
+              color: Colors.purple,
+              onPressed: () {
+                context
+                    .read<CartBloc>()
+                    .add(ProductAdded(product: widget.productData));
+                Navigator.of(context).push<void>(CartScreen.route());
+              },
+              text: 'BUY NOW',
             )
           ],
         ),

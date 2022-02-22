@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:formz/formz.dart';
 import 'package:promart/src/core/utils/screen/screen_util.dart';
 import 'package:promart/src/features/promart/presentation/cubit/login/login_cubit.dart';
-import 'package:promart/src/features/promart/presentation/pages/forgot_password_screen.dart';
-import 'package:promart/src/features/promart/presentation/pages/home_screen.dart';
-import 'package:promart/src/features/promart/presentation/pages/signup_screen.dart';
+import 'package:promart/src/features/promart/presentation/pages.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -27,7 +24,7 @@ class LoginForm extends StatelessWidget {
               ),
             );
         } else if (state.status.isSubmissionSuccess) {
-          Navigator.of(context).push<void>(HomeScreen.route());
+          Navigator.of(context).push<void>(CartScreen.route());
         }
       },
       child: SingleChildScrollView(

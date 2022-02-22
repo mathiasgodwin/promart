@@ -1,6 +1,6 @@
 part of 'promart_catalogue_cubit.dart';
 
-enum PromartCatalogStatus { loading, loaded, failure }
+enum PromartCatalogStatus {initial, loading, loaded, failure }
 
 class PromartCatalogState extends Equatable {
   final PromartCatalogStatus status;
@@ -8,7 +8,7 @@ class PromartCatalogState extends Equatable {
   final String? errorMessage;
 
   const PromartCatalogState(
-      {this.status = PromartCatalogStatus.loading,
+      {this.status = PromartCatalogStatus.initial,
       this.catalog,
       this.errorMessage});
 

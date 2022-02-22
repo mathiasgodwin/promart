@@ -9,6 +9,7 @@ export 'models/login_token_model.dart';
 export 'models/single_cart_model.dart';
 export 'models/single_product_model.dart';
 export 'models/single_user_model.dart';
+export 'models/cart_item.dart';
 
 
 

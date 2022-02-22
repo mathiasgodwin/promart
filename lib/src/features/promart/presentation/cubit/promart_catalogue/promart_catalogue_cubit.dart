@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:promart/src/core/utils/exceptions/get_remote_exceptions.dart';
-import 'package:promart/src/features/promart/data/datasources/remote/remote_datasource.dart';
+
 import 'package:promart/src/features/promart/data/models/all_products_model.dart';
 import 'package:promart/src/features/promart/data/repositories/promart_repository.dart';
 import 'package:promart/src/features/promart/domain/usecases/all_product_usecase.dart';
