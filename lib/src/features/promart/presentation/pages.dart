@@ -7,7 +7,6 @@ export 'pages/new_password_successful_screen.dart';
 export 'pages/product_details_screen.dart';
 export 'pages/signup_screen.dart';
 export 'pages/splash_screen.dart';
-export 'pages/home_screen.dart';
 export 'pages/wish_list_screen.dart';
 export 'pages/account_screen.dart';
 export 'pages/verify_codesent_email_screen.dart';

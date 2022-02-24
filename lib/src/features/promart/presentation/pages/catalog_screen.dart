@@ -4,12 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/core/utils/screen/screen_util.dart';
 import 'package:promart/src/features/promart/data/data.dart';
-import 'package:promart/src/features/promart/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
 import 'package:promart/src/features/promart/presentation/cubit/categories/categories_cubit.dart';
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
 import 'package:promart/src/features/promart/presentation/cubit/promart_catalogue/promart_catalogue_cubit.dart';
 import 'package:promart/src/features/promart/presentation/pages.dart';
+import 'package:promart/src/features/promart/presentation/widgets/cart_screen_appbar.dart';
 import 'package:promart/src/features/promart/presentation/widgets/products_listview.dart';
+import 'package:promart/src/features/promart/presentation/widgets/wish_list_appbar.dart';
 
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({
@@ -25,17 +27,49 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  bool _isTabSelected = false;
+  bool _isTabSelected1 = true;
+  bool _isTabSelected2 = false;
+  bool _isTabSelected3 = false;
+  bool _isTabSelected4 = false;
 
   int _currentIndex = 0;
 
-  // Returning null for the first appbar, just to make it complete four
-  final List<PreferredSizeWidget?> _bodyItem = [
-    null,
-    WishListScreen.appBar(),
-    CartScreen.appBar(),
-    AccountScreen.appBar()
+  final _globalAppBarKey = GlobalKey();
+
+  // Returning null for catalog screen and account screen.
+
+  final List<Widget> _bodyList = const [
+    _BodyListView(),
+    WishListScreen(),
+    CartScreen(),
+    AccountScreen()
   ];
+
+  AppBar _wishListAppBar() {
+    return AppBar(
+      key: UniqueKey(),
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: true,
+      title: const Text(
+        'Wishlist',
+        style: TextStyle(fontSize: 20),
+      ),
+      actions: const [Icon(Icons.favorite)],
+    );
+  }
+
+  AppBar _cartScreenAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      title: const Text(
+        'My Cart',
+        style: TextStyle(fontSize: 20),
+      ),
+      actions: const [
+        Icon(Icons.shopping_basket_outlined),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +84,68 @@ class _CatalogScreenState extends State<CatalogScreen> {
         unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
         selectedLabelStyle: textTheme.caption,
         unselectedLabelStyle: textTheme.caption,
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
+        type: BottomNavigationBarType.fixed,
         items: [
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             label: 'Home',
-            icon: Icon(Icons.home_filled),
+            icon: GFIconButton(
+              shape: GFIconButtonShape.circle,
+              type: GFButtonType.transparent,
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 0;
+                  _isTabSelected1 = true;
+                  _isTabSelected2 = false;
+                  _isTabSelected3 = false;
+                  _isTabSelected4 = false;
+                });
+              },
+              icon: _isTabSelected1
+                  ? const Icon(
+                      Icons.home_filled,
+                      color: Colors.red,
+                    )
+                  : const Icon(Icons.home_filled),
+            ),
           ),
-          const BottomNavigationBarItem(
-            label: 'Wishlist',
-            icon: Icon(Icons.favorite),
-          ),
+          BottomNavigationBarItem(
+              label: 'Wishlist',
+              icon: BlocBuilder<WishlistBloc, WishlistState>(
+                buildWhen: (prev, current) =>
+                    prev != current,
+                builder: (context, state) {
+                  return GFIconBadge(
+                    key: const Key('HomeCart_iconButtonBadge'),
+                    counterChild: GFBadge(
+                      shape: GFBadgeShape.circle,
+                      child: Text(
+                        state.items.length.toString(),
+                      ),
+                    ),
+                    child: GFIconButton(
+                        shape: GFIconButtonShape.circle,
+                        type: GFButtonType.transparent,
+                        icon: _isTabSelected2
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            : const Icon(Icons.favorite),
+                        onPressed: () {
+                          setState(() {
+                            _currentIndex = 1;
+
+                            _isTabSelected1 = false;
+                            _isTabSelected2 = true;
+                            _isTabSelected3 = false;
+                            _isTabSelected4 = false;
+                          });
+                        }),
+                  );
+                },
+              )),
           BottomNavigationBarItem(
               label: 'Carts',
               icon: BlocBuilder<CartBloc, CartState>(
@@ -68,13 +155,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   return GFIconBadge(
                     key: const Key('HomeCart_iconButtonBadge'),
                     counterChild: GFBadge(
+                      shape: GFBadgeShape.circle,
                       child: Text(
                         state.items.length.toString(),
                       ),
                     ),
                     child: GFIconButton(
                         shape: GFIconButtonShape.circle,
-                        icon: _isTabSelected
+                        type: GFButtonType.transparent,
+                        icon: _isTabSelected3
                             ? const Icon(
                                 Icons.shopping_basket_outlined,
                                 color: Colors.red,
@@ -82,64 +171,51 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             : const Icon(Icons.shopping_basket_outlined),
                         onPressed: () {
                           setState(() {
-                            _isTabSelected = true;
+                            _currentIndex = 2;
+
+                            _isTabSelected1 = false;
+                            _isTabSelected2 = false;
+                            _isTabSelected3 = true;
+                            _isTabSelected4 = false;
                           });
                         }),
                   );
                 },
               )),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             label: 'Account',
-            icon: Icon(Icons.person),
+            icon: GFIconButton(
+              shape: GFIconButtonShape.circle,
+              type: GFButtonType.transparent,
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 3;
+
+                  _isTabSelected1 = false;
+                  _isTabSelected2 = false;
+                  _isTabSelected3 = false;
+                  _isTabSelected4 = true;
+                });
+              },
+              icon: _isTabSelected4
+                  ? const Icon(
+                      Icons.person,
+                      color: Colors.red,
+                    )
+                  : const Icon(Icons.person),
+            ),
           ),
         ],
-        onTap: (value) {
-          // Respond to item press.
-          setState(() => _currentIndex = value);
-        },
+        currentIndex: _currentIndex,
       ),
       backgroundColor: Colors.white,
-
-      // Can't extract the appbar cus we need context for navigation,
-      // just don't wanna pass things around somehow
       appBar: _currentIndex == 0
-          ? AppBar(
-              leadingWidth: 1,
-              leading: const SizedBox(),
-              elevation: 0.0,
-              backgroundColor: Colors.purple,
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('Promart!',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: kToolbarHeight * 0.4,
-                          fontWeight: FontWeight.bold)),
-                  SizedBox(
-                    height: kToolbarHeight * 0.08,
-                  ),
-                  Text(
-                    "Let's go shopping",
-                    style: TextStyle(
-                        color: Colors.white, fontSize: kToolbarHeight * 0.2),
-                  )
-                ],
-              ),
-              actions: <Widget>[
-                IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.search_rounded)),
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(CartScreen.route());
-                    },
-                    icon: const Icon(Icons.shopping_basket_rounded))
-              ],
-            )
-          : _bodyItem[_currentIndex + 1],
-
-      // Since we have four bottom buttons
+          ? _catalogScreenAppBar(context)
+          : _currentIndex == 1
+              ? _wishListAppBar()
+              : _currentIndex == 2
+                  ? _cartScreenAppBar()
+                  : null,
       body: MultiBlocProvider(
         providers: [
           BlocProvider<CategoriesCubit>(
@@ -159,37 +235,84 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ..loadCatalog(),
           ),
         ],
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 20.w, left: 10.w),
-              child: Text(
-                'TOP CATEGORIES',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
-              ),
-            ),
-            SizedBox(height: 10.w),
-            const _AvailableCategories(),
-            SizedBox(height: 25.w),
-            const _ProductAdsCarouselSmall(),
-            SizedBox(height: 25.w),
-            const _RowDivider('Electronics'),
-            SizedBox(height: 10.w),
-            const ProductByCategoryName(category: 'electronics'),
-            //
-            SizedBox(height: 10.w),
-            const _RowDivider('New Arrival'),
-            SizedBox(height: 10.w),
-            const _ProductsAdsCarouselBig(),
-            SizedBox(height: 25.w),
-
-            const _AllProductsGrid(),
-
-            //
-          ],
-        ),
+        child: _bodyList[_currentIndex],
       ),
+    );
+  }
+
+  AppBar _catalogScreenAppBar(BuildContext context) {
+    return AppBar(
+      leadingWidth: 1,
+      leading: const SizedBox(),
+      elevation: 0.0,
+      backgroundColor: Colors.purple,
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text('Promart!',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: kToolbarHeight * 0.4,
+                  fontWeight: FontWeight.bold)),
+          SizedBox(
+            height: kToolbarHeight * 0.08,
+          ),
+          Text(
+            "Let's go shopping",
+            style:
+                TextStyle(color: Colors.white, fontSize: kToolbarHeight * 0.2),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded)),
+        IconButton(
+            onPressed: () {
+              Navigator.of(context).push(CartScreen.route());
+            },
+            icon: const Icon(Icons.shopping_basket_rounded))
+      ],
+    );
+  }
+}
+
+class _BodyListView extends StatelessWidget {
+  const _BodyListView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      shrinkWrap: true,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: 20.w, left: 10.w),
+          child: Text(
+            'TOP CATEGORIES',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
+          ),
+        ),
+        SizedBox(height: 10.w),
+        const _AvailableCategories(),
+        SizedBox(height: 25.w),
+        const _ProductAdsCarouselSmall(),
+        SizedBox(height: 25.w),
+        const _RowDivider('Electronics'),
+        SizedBox(height: 10.w),
+        const ProductByCategoryName(category: 'electronics'),
+        //
+        SizedBox(height: 10.w),
+        const _RowDivider('New Arrival'),
+        SizedBox(height: 10.w),
+        const _ProductsAdsCarouselBig(),
+        SizedBox(height: 25.w),
+
+        const _AllProductsGrid(),
+
+        //
+      ],
     );
   }
 }
@@ -206,7 +329,7 @@ class _AvailableCategories extends StatelessWidget {
     final _w = MediaQuery.of(context).size.width;
 
     return BlocConsumer<CategoriesCubit, CategoriesState>(
-      buildWhen: (prev, current) => prev.categories != current.categories,
+      buildWhen: (prev, current) => prev != current,
       listener: (context, state) {
         if (state.status == CategoriesStatus.loading) {
         } else if (state.status == CategoriesStatus.failure) {
@@ -267,7 +390,7 @@ class _AvailableCategories extends StatelessWidget {
                   color: Colors.purple,
                   shape: GFIconButtonShape.circle,
                   size: GFSize.LARGE,
-                  icon: const Icon(Icons.replay_circle_filled_rounded),
+                  icon: const Icon(Icons.replay),
                   onPressed: () {
                     categories.getCategories();
                   }));
@@ -592,7 +715,7 @@ class _AllProductsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final _w = size(context).width;
     return BlocConsumer<PromartCatalogCubit, PromartCatalogState>(
-        buildWhen: (prev, current) => prev.catalog != current.catalog,
+        buildWhen: (prev, current) => prev != current,
         listener: (context, state) {
           if (state.status == PromartCatalogStatus.failure) {
             ScaffoldMessenger.of(context)
@@ -653,7 +776,7 @@ class _AllProductsGrid extends StatelessWidget {
                     color: Colors.purple,
                     shape: GFIconButtonShape.circle,
                     size: GFSize.LARGE,
-                    icon: const Icon(Icons.replay_circle_filled_rounded),
+                    icon: const Icon(Icons.replay),
                     onPressed: () {
                       context.read<PromartCatalogCubit>().loadCatalog();
                     }));

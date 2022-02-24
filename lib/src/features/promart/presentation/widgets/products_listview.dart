@@ -16,7 +16,7 @@ class ProductByCategoryName extends StatelessWidget {
     final double _w = size(context).width;
 
     return BlocConsumer<ProductsByCategoriesCubit, ProductsByCategoriesState>(
-      buildWhen: (prev, current) => prev.products != current.products,
+      buildWhen: (prev, current) => prev != current,
       listener: (context, state) {
         if (state.status == ProductByCategoriesStatus.failure) {
           ScaffoldMessenger.of(context)
@@ -144,7 +144,7 @@ class ProductByCategoryName extends StatelessWidget {
               color: Colors.purple,
               shape: GFIconButtonShape.circle,
               size: GFSize.LARGE,
-              icon: const Icon(Icons.replay_circle_filled_rounded),
+              icon: const Icon(Icons.replay),
               onPressed: () {
                 context
                     .read<ProductsByCategoriesCubit>()

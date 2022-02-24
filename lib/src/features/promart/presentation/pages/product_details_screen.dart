@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/data/data.dart';
-import 'package:promart/src/features/promart/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
-import 'package:promart/src/features/promart/presentation/pages/cart_screen.dart';
+import 'package:promart/src/features/promart/presentation/pages.dart';
 import 'package:promart/src/features/promart/presentation/widgets/products_listview.dart';
 
 class ProductDetailsScreen extends StatefulWidget {

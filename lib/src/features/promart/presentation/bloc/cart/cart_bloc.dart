@@ -31,7 +31,6 @@ class CartBloc extends HydratedBloc<CartEvent, CartState> {
       );
       emit(state.copyWith(items: items));
     } else {
-
       // Or freshly add the item to the list of carts
       final items = state.items.rebuild((builder) => builder.add(cartItem));
 
@@ -42,6 +41,8 @@ class CartBloc extends HydratedBloc<CartEvent, CartState> {
   void _onCartItemRemoved(
       CartItemRemoved event, Emitter<CartState> emit) async {
     final cartItem = event.item;
+
+    // Remove the cart item from the cart list
     final items = state.items.rebuild((builder) => builder.remove(cartItem));
 
     emit(state.copyWith(items: items));
@@ -81,7 +82,6 @@ class CartBloc extends HydratedBloc<CartEvent, CartState> {
         emit(state.copyWith(items: items));
       }
     } else {
-
       // Else remove the item cus it's the last left in the list
       final items = state.items.rebuild((builder) => builder.remove(cartItem));
 
@@ -89,7 +89,7 @@ class CartBloc extends HydratedBloc<CartEvent, CartState> {
     }
   }
 
-// With this we can gaurantee our carts will persist across session
+// With this we can gaurantee at least our carts will persist across sessions
   @override
   CartState fromJson(Map<String, dynamic> json) {
     final cartItemsJsonList = json['items'] as List;

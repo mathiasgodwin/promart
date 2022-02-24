@@ -2,7 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:promart/src/features/promart/data/data.dart';
-import 'package:promart/src/features/promart/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
 import 'package:promart/src/features/promart/presentation/widgets/sized_network_image.dart';
 
 class CartScreen extends StatelessWidget {
@@ -11,16 +11,6 @@ class CartScreen extends StatelessWidget {
     return MaterialPageRoute<void>(builder: (_) => const CartScreen());
   }
 
-  static PreferredSizeWidget appBar() => AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          'My Cart',
-          style: TextStyle(fontSize: 20),
-        ),
-        actions: const [
-          Icon(Icons.shopping_basket_outlined),
-        ],
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +20,13 @@ class CartScreen extends StatelessWidget {
 
         return cartItems.isNotEmpty
             ? CartListView(cartItems: cartItems)
-            : const Text('Your cart is empty');
+            : const Center(child: Text('Your cart is empty'));
       },
     );
   }
 }
+
+
 
 class CartListView extends StatelessWidget {
   const CartListView({required this.cartItems, Key? key}) : super(key: key);

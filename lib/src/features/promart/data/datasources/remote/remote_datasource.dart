@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:promart/src/core/utils/cache/cache.dart';
+import 'package:promart/src/core/utils/cache/custom_cache.dart';
 import 'package:promart/src/core/utils/exceptions/dio_exceptions.dart';
 import 'package:promart/src/core/utils/exceptions/get_remote_exceptions.dart';
 import 'package:promart/src/core/utils/exceptions/google_auth_exceptions.dart';

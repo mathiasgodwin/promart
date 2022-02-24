@@ -4,14 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:promart/src/configs/theme/theme.dart';
 import 'package:promart/src/features/promart/data/repositories/promart_repository.dart';
-import 'package:promart/src/features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
-import 'package:promart/src/features/promart/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
+
 import 'package:promart/src/features/promart/presentation/pages/catalog_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/splash_screen.dart';
 import 'package:promart/src/features/promart/presentation/widgets/scroll_behavior.dart';
-
-import 'features/promart/presentation/bloc/auth_bloc/authbloc_bloc.dart';
 
 class App extends StatelessWidget {
   const App({
