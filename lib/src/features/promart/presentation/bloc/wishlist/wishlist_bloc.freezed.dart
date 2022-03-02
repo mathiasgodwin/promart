@@ -22,12 +22,6 @@ class _$WishlistEventTearOff {
       product: product,
     );
   }
-
-  WishRemoved removed({required WishlistItem item}) {
-    return WishRemoved(
-      item: item,
-    );
-  }
 }
 
 /// @nodoc
@@ -35,43 +29,43 @@ const $WishlistEvent = _$WishlistEventTearOff();
 
 /// @nodoc
 mixin _$WishlistEvent {
+  AllProductData get product => throw _privateConstructorUsedError;
+
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(AllProductData product) added,
-    required TResult Function(WishlistItem item) removed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(AllProductData product)? added,
-    TResult Function(WishlistItem item)? removed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(AllProductData product)? added,
-    TResult Function(WishlistItem item)? removed,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(WishAdded value) added,
-    required TResult Function(WishRemoved value) removed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(WishAdded value)? added,
-    TResult Function(WishRemoved value)? removed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(WishAdded value)? added,
-    TResult Function(WishRemoved value)? removed,
     required TResult orElse(),
   }) =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $WishlistEventCopyWith<WishlistEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -80,6 +74,7 @@ abstract class $WishlistEventCopyWith<$Res> {
   factory $WishlistEventCopyWith(
           WishlistEvent value, $Res Function(WishlistEvent) then) =
       _$WishlistEventCopyWithImpl<$Res>;
+  $Res call({AllProductData product});
 }
 
 /// @nodoc
@@ -90,12 +85,26 @@ class _$WishlistEventCopyWithImpl<$Res>
   final WishlistEvent _value;
   // ignore: unused_field
   final $Res Function(WishlistEvent) _then;
+
+  @override
+  $Res call({
+    Object? product = freezed,
+  }) {
+    return _then(_value.copyWith(
+      product: product == freezed
+          ? _value.product
+          : product // ignore: cast_nullable_to_non_nullable
+              as AllProductData,
+    ));
+  }
 }
 
 /// @nodoc
-abstract class $WishAddedCopyWith<$Res> {
+abstract class $WishAddedCopyWith<$Res>
+    implements $WishlistEventCopyWith<$Res> {
   factory $WishAddedCopyWith(WishAdded value, $Res Function(WishAdded) then) =
       _$WishAddedCopyWithImpl<$Res>;
+  @override
   $Res call({AllProductData product});
 }
 
@@ -155,7 +164,6 @@ class _$WishAdded implements WishAdded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(AllProductData product) added,
-    required TResult Function(WishlistItem item) removed,
   }) {
     return added(product);
   }
@@ -164,7 +172,6 @@ class _$WishAdded implements WishAdded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(AllProductData product)? added,
-    TResult Function(WishlistItem item)? removed,
   }) {
     return added?.call(product);
   }
@@ -173,7 +180,6 @@ class _$WishAdded implements WishAdded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(AllProductData product)? added,
-    TResult Function(WishlistItem item)? removed,
     required TResult orElse(),
   }) {
     if (added != null) {
@@ -186,7 +192,6 @@ class _$WishAdded implements WishAdded {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(WishAdded value) added,
-    required TResult Function(WishRemoved value) removed,
   }) {
     return added(this);
   }
@@ -195,7 +200,6 @@ class _$WishAdded implements WishAdded {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(WishAdded value)? added,
-    TResult Function(WishRemoved value)? removed,
   }) {
     return added?.call(this);
   }
@@ -204,7 +208,6 @@ class _$WishAdded implements WishAdded {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(WishAdded value)? added,
-    TResult Function(WishRemoved value)? removed,
     required TResult orElse(),
   }) {
     if (added != null) {
@@ -217,151 +220,11 @@ class _$WishAdded implements WishAdded {
 abstract class WishAdded implements WishlistEvent {
   const factory WishAdded({required AllProductData product}) = _$WishAdded;
 
+  @override
   AllProductData get product;
+  @override
   @JsonKey(ignore: true)
   $WishAddedCopyWith<WishAdded> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $WishRemovedCopyWith<$Res> {
-  factory $WishRemovedCopyWith(
-          WishRemoved value, $Res Function(WishRemoved) then) =
-      _$WishRemovedCopyWithImpl<$Res>;
-  $Res call({WishlistItem item});
-
-  $WishlistItemCopyWith<$Res> get item;
-}
-
-/// @nodoc
-class _$WishRemovedCopyWithImpl<$Res> extends _$WishlistEventCopyWithImpl<$Res>
-    implements $WishRemovedCopyWith<$Res> {
-  _$WishRemovedCopyWithImpl(
-      WishRemoved _value, $Res Function(WishRemoved) _then)
-      : super(_value, (v) => _then(v as WishRemoved));
-
-  @override
-  WishRemoved get _value => super._value as WishRemoved;
-
-  @override
-  $Res call({
-    Object? item = freezed,
-  }) {
-    return _then(WishRemoved(
-      item: item == freezed
-          ? _value.item
-          : item // ignore: cast_nullable_to_non_nullable
-              as WishlistItem,
-    ));
-  }
-
-  @override
-  $WishlistItemCopyWith<$Res> get item {
-    return $WishlistItemCopyWith<$Res>(_value.item, (value) {
-      return _then(_value.copyWith(item: value));
-    });
-  }
-}
-
-/// @nodoc
-
-class _$WishRemoved implements WishRemoved {
-  const _$WishRemoved({required this.item});
-
-  @override
-  final WishlistItem item;
-
-  @override
-  String toString() {
-    return 'WishlistEvent.removed(item: $item)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is WishRemoved &&
-            const DeepCollectionEquality().equals(other.item, item));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(item));
-
-  @JsonKey(ignore: true)
-  @override
-  $WishRemovedCopyWith<WishRemoved> get copyWith =>
-      _$WishRemovedCopyWithImpl<WishRemoved>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(AllProductData product) added,
-    required TResult Function(WishlistItem item) removed,
-  }) {
-    return removed(item);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AllProductData product)? added,
-    TResult Function(WishlistItem item)? removed,
-  }) {
-    return removed?.call(item);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AllProductData product)? added,
-    TResult Function(WishlistItem item)? removed,
-    required TResult orElse(),
-  }) {
-    if (removed != null) {
-      return removed(item);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(WishAdded value) added,
-    required TResult Function(WishRemoved value) removed,
-  }) {
-    return removed(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(WishAdded value)? added,
-    TResult Function(WishRemoved value)? removed,
-  }) {
-    return removed?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(WishAdded value)? added,
-    TResult Function(WishRemoved value)? removed,
-    required TResult orElse(),
-  }) {
-    if (removed != null) {
-      return removed(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class WishRemoved implements WishlistEvent {
-  const factory WishRemoved({required WishlistItem item}) = _$WishRemoved;
-
-  WishlistItem get item;
-  @JsonKey(ignore: true)
-  $WishRemovedCopyWith<WishRemoved> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

@@ -24,7 +24,7 @@ class LoginForm extends StatelessWidget {
               ),
             );
         } else if (state.status.isSubmissionSuccess) {
-          Navigator.of(context).push<void>(CartScreen.route());
+          Navigator.of(context).push<void>(CatalogScreen.route());
         }
       },
       child: SingleChildScrollView(

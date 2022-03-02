@@ -11,7 +11,7 @@ part 'wishlist_bloc.freezed.dart';
 class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
   WishlistBloc() : super(WishlistState.initial()) {
     on<WishAdded>(_onWishAdded);
-    on<WishRemoved>(_onWishRemoved);
+    // on<WishRemoved>(_onWishRemoved);
   }
 
   void _onWishAdded(WishAdded event, Emitter<WishlistState> emit) {
@@ -19,19 +19,20 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     final isWished = state.items.contains(wishItem);
 
     if (isWished) {
-      // emit(state.copyWith(items: state.items));
+      final items = state.items.rebuild((builder) => builder.remove(wishItem));
+      emit(state.copyWith(items: items));
     } else {
       final items = state.items.rebuild((builder) => builder.add(wishItem));
       emit(state.copyWith(items: items));
     }
   }
 
-  void _onWishRemoved(WishRemoved event, Emitter<WishlistState> emit) {
-    final wishItem = event.item;
-    final isWished = state.items.contains(wishItem);
-    if (isWished) {
-      final items = state.items.rebuild((builder) => builder.remove(wishItem));
-      emit(state.copyWith(items: items));
-    } else {}
-  }
+  // void _onWishRemoved(WishRemoved event, Emitter<WishlistState> emit) {
+  //   final wishItem = event.item;
+  //   final isWished = state.items.contains(wishItem);
+  //   if (isWished) {
+  //     final items = state.items.rebuild((builder) => builder.remove(wishItem));
+  //     emit(state.copyWith(items: items));
+  //   } else {}
+  // }
 }

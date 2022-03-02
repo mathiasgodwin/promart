@@ -1,29 +1,31 @@
-import 'package:flutter/material.dart';
-
 import 'package:built_collection/built_collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:promart/src/features/promart/data/models/wishlist_item.dart';
 import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
 import 'package:promart/src/features/promart/presentation/widgets/sized_network_image.dart';
 
-class WishlistScreen extends StatelessWidget {
-  const WishlistScreen({Key? key}) : super(key: key);
+class WishlistScreenScaffold extends StatelessWidget {
+  const WishlistScreenScaffold({Key? key}) : super(key: key);
 
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const WishlistScreen());
+    return MaterialPageRoute<void>(
+        builder: (_) => const WishlistScreenScaffold());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WishlistBloc, WishlistState>(
-      builder: (context, state) {
-        final wishItems = state.items;
-        return wishItems.isNotEmpty
-            ? _WishlistListView(wishListItem: wishItems)
-            : const Center(
-                child: Text('Your Wishlist is empty'),
-              );
-      },
+    return Scaffold(
+      body: BlocBuilder<WishlistBloc, WishlistState>(
+        builder: (context, state) {
+          final wishItems = state.items;
+          return wishItems.isNotEmpty
+              ? _WishlistListView(wishListItem: wishItems)
+              : const Center(
+                  child: Text('Your Wishlist is empty'),
+                );
+        },
+      ),
     );
   }
 }

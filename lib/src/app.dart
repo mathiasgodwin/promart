@@ -5,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:promart/src/configs/theme/theme.dart';
 import 'package:promart/src/features/promart/data/repositories/promart_repository.dart';
 import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
+import 'package:promart/src/features/promart/presentation/cubit/cubit.dart';
 
 import 'package:promart/src/features/promart/presentation/pages/catalog_screen.dart';
 import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
-import 'package:promart/src/features/promart/presentation/pages/splash_screen.dart';
 import 'package:promart/src/features/promart/presentation/widgets/scroll_behavior.dart';
+
+import 'features/promart/presentation/pages/splash_loading_assets.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -27,6 +29,9 @@ class App extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+              create: (_) => LoadingAssetSplashCubit()..loadAssets(true)),
+          //TODO:  // BlocProvider(create: (context) => InternetCubit(connectivity: Connectivity())),
+          BlocProvider(
             create: (_) => AuthBloc(
               promartRepository: _promartRespository,
             ),
@@ -34,6 +39,7 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => CartBloc(),
           ),
+          BlocProvider(create: (context) => WishlistBloc()),
         ],
         child: const AppView(),
       ),
@@ -52,7 +58,6 @@ class _AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState get _navigator => _navigatorKey.currentState!;
-  // final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -65,33 +70,40 @@ class _AppViewState extends State<AppView> {
         builder: (context, child) {
           ScreenUtil.setContext(context);
           return ScrollConfiguration(
-            behavior: CustomScrollBehavior(),
-            child: BlocListener<AuthBloc, AuthState>(
-              listener: (context, state) {
-                switch (state.status) {
-                  case AuthStatus.authenticated:
-                    _navigator.pushAndRemoveUntil<void>(
-                      CatalogScreen.route(),
-                      (route) => false,
+              behavior: CustomScrollBehavior(),
+              child:
+                  BlocBuilder<LoadingAssetSplashCubit, LoadingAssetSplashState>(
+                builder: (context, state) {
+                  if (state.status == LoadingAssetsStatus.loaded) {
+                    return BlocListener<AuthBloc, AuthState>(
+                      child: child,
+                      listener: (context, state) {
+                        switch (state.status) {
+                          case AuthStatus.authenticated:
+                            _navigator.pushAndRemoveUntil<void>(
+                              CatalogScreen.route(),
+                              (route) => false,
+                            );
+                            break;
+                          case AuthStatus.unauthenticated:
+                            _navigator.pushAndRemoveUntil<void>(
+                              LoginScreen.route(),
+                              (route) => false,
+                            );
+                            break;
+                          default:
+                            break;
+                        }
+                      },
                     );
-                    break;
-                  case AuthStatus.unauthenticated:
-                    _navigator.pushAndRemoveUntil<void>(
-                      LoginScreen.route(),
-                      (route) => false,
-                    );
-                    break;
-                  default:
-                    break;
-                }
-              },
-              child: child,
-            ),
-          );
+                  } else {}
+                  return child!;
+                },
+              ));
         },
         debugShowCheckedModeBanner: false,
         theme: theme,
-        onGenerateRoute: (_) => SplashScreen.route(),
+        onGenerateRoute: (_) => SplashLoadingAssets.route(),
       ),
     );
   }

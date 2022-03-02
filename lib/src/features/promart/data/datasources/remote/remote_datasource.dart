@@ -139,7 +139,7 @@ class RemoteDataSource implements IRemoteDataSource {
             (firebase_auth.PhoneAuthCredential credential) async {
           // ANDROID ONLY!
           // Sign the user in (or link) with the auto-generated credential.
-          // The feature is currently disabled for the sake of simplicity of the tutorial.
+          // The feature is currently disabled.
         },
         codeSent: (String verificationId, int? resendToken) async {
           // Update the UI - wait for the user to enter the SMS code

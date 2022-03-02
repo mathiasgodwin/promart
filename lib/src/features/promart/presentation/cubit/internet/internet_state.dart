@@ -18,6 +18,9 @@ class InternetConnected extends InternetState {
   final ConnectionType connectionType;
 
   const InternetConnected({required this.connectionType});
+
+  @override
+  List<Object> get props => [connectionType];
 }
 
 class InternetDiscornnected extends InternetState {}

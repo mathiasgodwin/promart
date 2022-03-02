@@ -24,11 +24,13 @@ class SizedNetworkImage extends StatelessWidget {
       height: imageHeight,
       child: AspectRatio(
         aspectRatio: 1.0,
-        child: CachedNetworkImage(
-          cacheManager: cacheManager,
-          imageUrl: imageUrl,
-          placeholder: (_, __) => const CircularProgressIndicator(),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
+        child: Center(
+          child: CachedNetworkImage(
+            cacheManager: cacheManager,
+            imageUrl: imageUrl,
+            placeholder: (_, __) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
         ),
       ),
     );

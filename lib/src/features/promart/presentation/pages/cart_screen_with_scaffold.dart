@@ -5,28 +5,43 @@ import 'package:promart/src/features/promart/data/data.dart';
 import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
 import 'package:promart/src/features/promart/presentation/widgets/sized_network_image.dart';
 
-class CartScreen extends StatelessWidget {
-  const CartScreen({Key? key}) : super(key: key);
+class CartScreenScaffold extends StatelessWidget {
+  const CartScreenScaffold({Key? key}) : super(key: key);
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const CartScreen());
+    return MaterialPageRoute<void>(builder: (_) => const CartScreenScaffold());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        final cartItems = state.items;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'My Cart',
+          style: TextStyle(fontSize: 20, color: Colors.black),
+        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Icon(Icons.shopping_basket_outlined, color: Colors.black,),
+          ),
+        ],
+      ),
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          final cartItems = state.items;
 
-        return cartItems.isNotEmpty
-            ? CartListView(cartItems: cartItems)
-            : const Center(child: Text('Your cart is empty'));
-      },
+          return cartItems.isNotEmpty
+              ? _CartListView(cartItems: cartItems)
+              : const Center(child: Text('Your cart is empty'));
+        },
+      ),
     );
   }
 }
 
-class CartListView extends StatelessWidget {
-  const CartListView({required this.cartItems, Key? key}) : super(key: key);
+class _CartListView extends StatelessWidget {
+  const _CartListView({required this.cartItems, Key? key}) : super(key: key);
 
   final BuiltList<CartItem> cartItems;
   double get totalPrice =>
@@ -37,15 +52,15 @@ class CartListView extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          for (final item in cartItems) CartListItem(item: item),
+          for (final item in cartItems) _CartListItem(item: item),
         ],
       ),
     );
   }
 }
 
-class CartListItem extends StatelessWidget {
-  const CartListItem({required this.item, Key? key}) : super(key: key);
+class _CartListItem extends StatelessWidget {
+  const _CartListItem({required this.item, Key? key}) : super(key: key);
 
   final CartItem item;
 

@@ -10,3 +10,5 @@ export 'pages/splash_screen.dart';
 export 'pages/wish_list_screen.dart';
 export 'pages/account_screen.dart';
 export 'pages/verify_codesent_email_screen.dart';
+export 'pages/cart_screen_with_scaffold.dart';
+export 'pages/wish_list_screen_with_scaffold.dart';

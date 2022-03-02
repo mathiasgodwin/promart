@@ -7,6 +7,7 @@ part 'wishlist_item.g.dart';
 @freezed
 class WishlistItem with _$WishlistItem {
   const factory WishlistItem({
+    // required bool isWish,
     required AllProductData product,
   }) = _WishlistItem;
 

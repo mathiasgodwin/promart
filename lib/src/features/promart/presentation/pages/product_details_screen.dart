@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:promart/src/features/promart/data/data.dart';
+import 'package:promart/src/features/promart/data/models/wishlist_item.dart';
 import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
 import 'package:promart/src/features/promart/presentation/pages.dart';
@@ -24,7 +25,6 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  bool _isFavourite = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +55,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 context
                     .read<CartBloc>()
                     .add(ProductAdded(product: widget.productData));
-                Navigator.of(context).push<void>(CartScreen.route());
+                Navigator.of(context).push<void>(CartScreenScaffold.route());
               },
               text: 'BUY NOW',
             )
@@ -155,40 +155,69 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             GFButton(
                               onPressed: () {},
                               color: Colors.green.withOpacity(0.1),
-                              text: 'Extra #200 Off',
+                              text: 'Extra ₦200 Off',
                               textStyle: TextStyle(
                                   fontSize: 10.sp, color: Colors.black),
                               shape: GFButtonShape.pills,
                             ),
+                            const SizedBox(
+                              width: 3,
+                            ),
                             GFButton(
                               onPressed: () {},
                               color: Colors.red.withOpacity(0.1),
-                              text: 'EMI Starts from #451',
+                              text: 'EMI Starts from ₦451',
                               textStyle:
                                   TextStyle(fontSize: 10.sp, color: Colors.red),
                               shape: GFButtonShape.pills,
                             ),
                           ],
                         ),
-                        GFIconButton(
-                            shape: GFIconButtonShape.circle,
-                            color: Colors.white,
-                            icon: _isFavourite
-                                ? const Icon(
-                                    FontAwesomeIcons.heart,
-                                    color: Colors.red,
-                                  )
-                                : const Icon(
-                                    FontAwesomeIcons.heart,
-                                    color: Colors.grey,
-                                  ),
-                            onPressed: () {
-                              setState(() {
-                                _isFavourite
-                                    ? _isFavourite = false
-                                    : _isFavourite = true;
-                              });
-                            })
+                        BlocBuilder<WishlistBloc, WishlistState>(
+                          buildWhen: (prev, current) =>
+                              prev.items != prev.items,
+                          builder: (context, state) {
+                            final _item =
+                                WishAdded(product: widget.productData);
+                            final _wish =
+                                WishlistItem(product: widget.productData);
+
+                            // Check if item is a favorite already
+                            final _isWished = state.items.contains(_wish);
+                            return GFIconButton(
+                                key: const Key('GFIconbutton_wishlist_icon'),
+                                shape: GFIconButtonShape.circle,
+                                color: Colors.white,
+                                icon: _isWished
+                                    ? const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      )
+                                    : const Icon(
+                                        Icons.favorite_border,
+                                        color: Colors.grey,
+                                      ),
+                                onPressed: () {
+                                  // Widget should rebuild to update favorite icon
+                                  context.watch<WishlistBloc>().add(_item);
+                                  // if (_isWished) {
+                                  //   ScaffoldMessenger.of(context)
+                                  //     ..hideCurrentSnackBar()
+                                  //     ..showSnackBar(const SnackBar(
+                                  //       content: Text('Removed from Wishlist'),
+                                  //       duration: Duration(seconds: 1),
+                                  //     ));
+                                  // } else {
+                                  //   ScaffoldMessenger.of(context)
+                                  //     ..hideCurrentSnackBar()
+                                  //     ..showSnackBar(const SnackBar(
+                                  //       content: Text('Added to Wishlist'),
+                                  //       duration: Duration(seconds: 1),
+                                  //     ));
+                                  // }
+                                });
+                          },
+                        )
                       ],
                     ),
                   ),
@@ -207,14 +236,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                '#' + widget.productData.price.toString(),
+                                '₦' + widget.productData.price.toString(),
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '#' + widget.productData.price.toString(),
+                                '₦' + widget.productData.price.toString(),
                                 style: TextStyle(
                                     decoration: TextDecoration.lineThrough,
                                     fontWeight: FontWeight.w400,

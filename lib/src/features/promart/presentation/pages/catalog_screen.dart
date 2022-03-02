@@ -9,9 +9,7 @@ import 'package:promart/src/features/promart/presentation/cubit/categories/categ
 import 'package:promart/src/features/promart/presentation/cubit/products_by_categories/products_by_categories_cubit.dart';
 import 'package:promart/src/features/promart/presentation/cubit/promart_catalogue/promart_catalogue_cubit.dart';
 import 'package:promart/src/features/promart/presentation/pages.dart';
-import 'package:promart/src/features/promart/presentation/widgets/cart_screen_appbar.dart';
 import 'package:promart/src/features/promart/presentation/widgets/products_listview.dart';
-import 'package:promart/src/features/promart/presentation/widgets/wish_list_appbar.dart';
 
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({
@@ -34,39 +32,50 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
   int _currentIndex = 0;
 
-  final _globalAppBarKey = GlobalKey();
-
-  // Returning null for catalog screen and account screen.
-
   final List<Widget> _bodyList = const [
-    _BodyListView(),
-    WishListScreen(),
-    CartScreen(),
-    AccountScreen()
+    _BodyListView(key: ValueKey<int>(00)),
+    WishlistScreen(key: ValueKey<int>(11)),
+    CartScreen(key: ValueKey<int>(22)),
+    AccountScreen(key: ValueKey<int>(33))
   ];
 
   AppBar _wishListAppBar() {
     return AppBar(
-      key: UniqueKey(),
+      key: const ValueKey<int>(1),
       backgroundColor: Colors.white,
       automaticallyImplyLeading: true,
       title: const Text(
         'Wishlist',
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20, color: Colors.black),
       ),
-      actions: const [Icon(Icons.favorite)],
+      actions: const [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Icon(
+            Icons.favorite,
+            color: Colors.black,
+          ),
+        )
+      ],
     );
   }
 
   AppBar _cartScreenAppBar() {
     return AppBar(
+      key: const ValueKey<int>(2),
       backgroundColor: Colors.white,
       title: const Text(
         'My Cart',
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20, color: Colors.black),
       ),
       actions: const [
-        Icon(Icons.shopping_basket_outlined),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Icon(
+            Icons.shopping_basket_outlined,
+            color: Colors.black,
+          ),
+        ),
       ],
     );
   }
@@ -76,7 +85,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
     //
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    //
+    // Most code here need some serious re-factoring :)
+    // A lot of experimental stuffs here expecially the switching of app bars
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: colorScheme.surface,
@@ -113,8 +123,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
           BottomNavigationBarItem(
               label: 'Wishlist',
               icon: BlocBuilder<WishlistBloc, WishlistState>(
-                buildWhen: (prev, current) =>
-                    prev != current,
+                buildWhen: (prev, current) => prev != current,
                 builder: (context, state) {
                   return GFIconBadge(
                     key: const Key('HomeCart_iconButtonBadge'),
@@ -215,7 +224,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ? _wishListAppBar()
               : _currentIndex == 2
                   ? _cartScreenAppBar()
-                  : null,
+                  : _accountScreenAppBar(),
       body: MultiBlocProvider(
         providers: [
           BlocProvider<CategoriesCubit>(
@@ -240,8 +249,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
     );
   }
 
+  AppBar? _accountScreenAppBar() {
+    // Account screen doesn't construct an app bar (based on the UI design)
+    return null;
+  }
+
   AppBar _catalogScreenAppBar(BuildContext context) {
     return AppBar(
+      key: const ValueKey<int>(0),
       leadingWidth: 1,
       leading: const SizedBox(),
       elevation: 0.0,
@@ -269,7 +284,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
         IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded)),
         IconButton(
             onPressed: () {
-              Navigator.of(context).push(CartScreen.route());
+              Navigator.of(context).push(CartScreenScaffold.route());
             },
             icon: const Icon(Icons.shopping_basket_rounded))
       ],
@@ -285,6 +300,7 @@ class _BodyListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      addAutomaticKeepAlives: true,
       shrinkWrap: true,
       children: <Widget>[
         Padding(
@@ -340,9 +356,10 @@ class _AvailableCategories extends StatelessWidget {
       },
       builder: (context, state) {
         if (state.status == CategoriesStatus.loaded) {
-          return const Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: _CategoriesScrollViewWidget(),
+          final items = state.categories.data;
+          return Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: _CategoriesScrollViewWidget(items: items),
           );
         } else if (state.status == CategoriesStatus.loading) {
           return Center(
@@ -403,9 +420,19 @@ class _AvailableCategories extends StatelessWidget {
 }
 
 class _CategoriesScrollViewWidget extends StatelessWidget {
+  final List<String> items;
   const _CategoriesScrollViewWidget({
     Key? key,
+    required this.items,
   }) : super(key: key);
+
+  final List<String> _imagePath = const [
+    'jewelry_category',
+    'men_category',
+    'women_category',
+    'electronic_category',
+    'boy_with_cap'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -416,107 +443,116 @@ class _CategoriesScrollViewWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/cat3.jpg')),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
+            for (final item in _imagePath)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: SizedBox(
+                  height: 70,
+                  width: 70,
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        child: Image.asset(
+                          'assets/images/$item.jpg',
+                          gaplessPlayback: true,
+                          fit: BoxFit.cover,
+                        ),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                      // Text(
+                      //   state.categories.data[0],
+                      //   style: const TextStyle(
+                      //       color: Colors.white, fontSize: 12),
+                      // )
+                    ],
                   ),
-                  // Text(
-                  //   state.categories.data[0],
-                  //   style: const TextStyle(
-                  //       color: Colors.white, fontSize: 12),
-                  // )
-                ],
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                      decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage('assets/images/cat3.jpg')),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  )),
-                  // Text(
-                  //   state.categories.data[1],
-                  //   style: const TextStyle(color: Colors.white),
-                  // )
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage('assets/images/cat3.jpg'))),
-                  ),
-                  // Text(
-                  //   state.categories.data[2],
-                  //   style: const TextStyle(color: Colors.white),
-                  // )
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage('assets/images/cat3.jpg')),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                  // Text(
-                  //   state.categories.data[3],
-                  //   style: const TextStyle(color: Colors.white),
-                  // )
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                      decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage('assets/images/cat3.jpg')),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  )),
-                  // Text(
-                  //   state.categories.data[3],
-                  //   style: const TextStyle(color: Colors.white),
-                  // )
-                ],
-              ),
-            ),
+            // const SizedBox(width: 8),
+            // SizedBox(
+            //   height: 70,
+            //   width: 70,
+            //   child: Stack(
+            //     children: <Widget>[
+            //       Container(
+            //           decoration: const BoxDecoration(
+            //         image: DecorationImage(
+            //             fit: BoxFit.fill,
+            //             image: AssetImage('assets/images/men_category.jpg')),
+            //         borderRadius: BorderRadius.all(Radius.circular(10)),
+            //       )),
+            //       // Text(
+            //       //   state.categories.data[1],
+            //       //   style: const TextStyle(color: Colors.white),
+            //       // )
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(width: 8),
+            // SizedBox(
+            //   height: 70,
+            //   width: 70,
+            //   child: Stack(
+            //     children: <Widget>[
+            //       Container(
+            //         decoration: const BoxDecoration(
+            //             borderRadius: BorderRadius.all(Radius.circular(10)),
+            //             image: DecorationImage(
+            //                 fit: BoxFit.fill,
+            //                 image: AssetImage(
+            //                     'assets/images/women_category.jpg'))),
+            //       ),
+            //       // Text(
+            //       //   state.categories.data[2],
+            //       //   style: const TextStyle(color: Colors.white),
+            //       // )
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(width: 8),
+            // SizedBox(
+            //   height: 70,
+            //   width: 70,
+            //   child: Stack(
+            //     children: <Widget>[
+            //       Container(
+            //         decoration: const BoxDecoration(
+            //           image: DecorationImage(
+            //               fit: BoxFit.fill,
+            //               image: AssetImage(
+            //                   'assets/images/electronic_category.jpg')),
+            //           borderRadius: BorderRadius.all(Radius.circular(10)),
+            //         ),
+            //       ),
+            //       // Text(
+            //       //   state.categories.data[3],
+            //       //   style: const TextStyle(color: Colors.white),
+            //       // )
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(width: 8),
+            // SizedBox(
+            //   height: 70,
+            //   width: 70,
+            //   child: Stack(
+            //     children: <Widget>[
+            //       Container(
+            //           decoration: const BoxDecoration(
+            //         image: DecorationImage(
+            //             fit: BoxFit.fill,
+            //             image: AssetImage('assets/images/2.jpg')),
+            //         borderRadius: BorderRadius.all(Radius.circular(10)),
+            //       )),
+            //       // Text(
+            //       //   state.categories.data[3],
+            //       //   style: const TextStyle(color: Colors.white),
+            //       // )
+            //     ],
+            //   ),
+            // ),
           ],
         ));
   }
@@ -524,6 +560,15 @@ class _CategoriesScrollViewWidget extends StatelessWidget {
 
 class _ProductAdsCarouselSmall extends StatelessWidget {
   const _ProductAdsCarouselSmall({Key? key}) : super(key: key);
+
+  final List<String> _imagePath = const [
+    'carousel_1',
+    'carousel_2',
+    'carousel_3',
+    'carousel_4',
+    'carousel_5',
+    'carousel_6',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -534,69 +579,23 @@ class _ProductAdsCarouselSmall extends StatelessWidget {
         autoPlay: true,
         scrollPhysics: const BouncingScrollPhysics(),
         items: <Widget>[
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
+          for (final item in _imagePath)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Container(
+                height: 150,
+                child: Image.asset(
+                  'assets/images/$item.jpg',
+                  gaplessPlayback: true,
+                  fit: BoxFit.cover,
+                ),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: const AssetImage('assets/images/cat3.jpg'),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
-              ),
-              child: Column(
-                children: const <Widget>[],
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
         ]);
   }
 }
@@ -604,6 +603,13 @@ class _ProductAdsCarouselSmall extends StatelessWidget {
 class _ProductsAdsCarouselBig extends StatelessWidget {
   const _ProductsAdsCarouselBig({Key? key}) : super(key: key);
 
+  final List<String> _imagePath = const [
+    'carousel_landscape_1',
+    'carousel_landscape_2',
+    'carousel_landscape_3',
+    'carousel_landscape_4',
+    'carousel_landscape_5',
+  ];
   @override
   Widget build(BuildContext context) {
     return GFCarousel(
@@ -614,69 +620,23 @@ class _ProductsAdsCarouselBig extends StatelessWidget {
         autoPlay: false,
         scrollPhysics: const BouncingScrollPhysics(),
         items: <Widget>[
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 200,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
+          for (final item in _imagePath)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Container(
+                height: 200,
+                child: Image.asset(
+                  'assets/images/$item.jpg',
+                  gaplessPlayback: true,
+                  fit: BoxFit.cover,
+                ),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 200,
-              image: const AssetImage('assets/images/cat3.jpg'),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
-              ),
-              child: Column(
-                children: const <Widget>[],
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: GFImageOverlay(
-              height: 150,
-              image: AssetImage('assets/images/cat3.jpg'),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
         ]);
   }
 }
@@ -732,44 +692,46 @@ class _AllProductsGrid extends StatelessWidget {
             );
           } else if (state.status == PromartCatalogStatus.loading) {
             return Center(
-                child: GFShimmer(
-                    child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 56,
-                    height: 46,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              child: GFShimmer(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
+                        width: 56,
+                        height: 46,
                         color: Colors.white,
-                        height: 8,
-                        width: double.infinity,
                       ),
-                      const SizedBox(height: 6),
-                      Container(
-                        color: Colors.white,
-                        height: 8,
-                        width: _w * 0.5,
-                      ),
-                      const SizedBox(height: 6),
-                      Container(
-                        color: Colors.white,
-                        height: 8,
-                        width: _w * 0.25,
-                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            color: Colors.white,
+                            height: 8,
+                            width: double.infinity,
+                          ),
+                          const SizedBox(height: 6),
+                          Container(
+                            color: Colors.white,
+                            height: 8,
+                            width: _w * 0.5,
+                          ),
+                          const SizedBox(height: 6),
+                          Container(
+                            color: Colors.white,
+                            height: 8,
+                            width: _w * 0.25,
+                          ),
+                        ],
+                      ))
                     ],
-                  ))
-                ],
+                  ),
+                ),
               ),
-            )));
+            );
           } else if (state.status == PromartCatalogStatus.failure) {
             return Center(
                 child: GFIconButton(

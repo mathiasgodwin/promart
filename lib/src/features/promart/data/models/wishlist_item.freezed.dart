@@ -37,6 +37,7 @@ const $WishlistItem = _$WishlistItemTearOff();
 
 /// @nodoc
 mixin _$WishlistItem {
+// required bool isWish,
   AllProductData get product => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -115,7 +116,7 @@ class _$_WishlistItem implements _WishlistItem {
   factory _$_WishlistItem.fromJson(Map<String, dynamic> json) =>
       _$$_WishlistItemFromJson(json);
 
-  @override
+  @override // required bool isWish,
   final AllProductData product;
 
   @override
@@ -153,7 +154,7 @@ abstract class _WishlistItem implements WishlistItem {
   factory _WishlistItem.fromJson(Map<String, dynamic> json) =
       _$_WishlistItem.fromJson;
 
-  @override
+  @override // required bool isWish,
   AllProductData get product;
   @override
   @JsonKey(ignore: true)
