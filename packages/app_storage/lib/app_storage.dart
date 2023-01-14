@@ -23,8 +23,8 @@ class AppStorageRepository implements IAppStorageRepository {
   final _secureStorage =
       const FlutterSecureStorage(aOptions: AndroidOptions(resetOnError: true));
 
-  static const _secureStorageBox = 'rechii_secure_storage';
-  static const String _userKey = '_rechii_user_key_';
+  static const _secureStorageBox = '_secure_storage';
+  static const String _userKey = '_user_key_';
 
   final logger = Logger(
     printer: PrettyPrinter(
