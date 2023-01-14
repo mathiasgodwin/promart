@@ -61,50 +61,50 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: () => MaterialApp(
-        navigatorKey: _navigatorKey,
-        builder: (context, child) {
-          ScreenUtil.setContext(context);
-          return ScrollConfiguration(
-              behavior: CustomScrollBehavior(),
-              child:
-                  BlocBuilder<LoadingAssetSplashCubit, LoadingAssetSplashState>(
-                builder: (context, state) {
-                  if (state.status == LoadingAssetsStatus.loaded) {
-                    return BlocListener<AuthBloc, AuthState>(
-                      child: child,
-                      listener: (context, state) {
-                        switch (state.status) {
-                          case AuthStatus.authenticated:
-                            _navigator.pushAndRemoveUntil<void>(
-                              CatalogScreen.route(),
-                              (route) => false,
-                            );
-                            break;
-                          case AuthStatus.unauthenticated:
-                            _navigator.pushAndRemoveUntil<void>(
-                              LoginScreen.route(),
-                              (route) => false,
-                            );
-                            break;
-                          default:
-                            break;
-                        }
-                      },
-                    );
-                  } else {}
-                  return child!;
-                },
-              ));
-        },
-        debugShowCheckedModeBanner: false,
-        theme: theme,
-        onGenerateRoute: (_) => SplashLoadingAssets.route(),
-      ),
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      builder: (context, child) {
+        ScreenUtil.init(
+          context,
+          designSize: const Size(360, 690),
+          minTextAdapt: true,
+          splitScreenMode: true,
+        );
+        return ScrollConfiguration(
+            behavior: CustomScrollBehavior(),
+            child:
+                BlocBuilder<LoadingAssetSplashCubit, LoadingAssetSplashState>(
+              builder: (context, state) {
+                if (state.status == LoadingAssetsStatus.loaded) {
+                  return BlocListener<AuthBloc, AuthState>(
+                    child: child,
+                    listener: (context, state) {
+                      switch (state.status) {
+                        case AuthStatus.authenticated:
+                          _navigator.pushAndRemoveUntil<void>(
+                            CatalogScreen.route(),
+                            (route) => false,
+                          );
+                          break;
+                        case AuthStatus.unauthenticated:
+                          _navigator.pushAndRemoveUntil<void>(
+                            LoginScreen.route(),
+                            (route) => false,
+                          );
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  );
+                } else {}
+                return child!;
+              },
+            ));
+      },
+      debugShowCheckedModeBanner: false,
+      theme: theme,
+      onGenerateRoute: (_) => SplashLoadingAssets.route(),
     );
   }
 }
