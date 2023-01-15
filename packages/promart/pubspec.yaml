@@ -1,0 +1,28 @@
+name: promart_api
+description: Dart package to manage {Feature} data and domain layers.
+version: 0.0.1+1
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"
+
+dependencies: 
+  dio: ^4.0.6
+  equatable: ^2.0.5
+  firebase_exceptions:
+    path: ../firebase_exceptions
+  dio_network_exceptions:
+    path: ../dio_network_exceptions
+  logger: ^1.1.0
+  firebase_auth: ^3.3.5
+  firebase_core: ^1.11.0
+  google_sign_in: ^5.2.1
+  in_memory_cache:
+    path: ../in_memory_cache
+  freezed: ^2.3.2
+  freezed_annotation: ^2.2.0
+  
+
+dev_dependencies:
+  build_runner: ^2.3.3
+  mocktail: ^0.3.0

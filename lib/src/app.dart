@@ -3,15 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:promart/src/configs/theme/theme.dart';
-import 'package:promart/src/features/promart/data/repositories/promart_repository.dart';
-import 'package:promart/src/features/promart/presentation/bloc/bloc.dart';
-import 'package:promart/src/features/promart/presentation/cubit/cubit.dart';
+import 'package:promart/src/features/promart/logic/bloc/auth/auth.dart';
+import 'package:promart/src/features/promart/logic/bloc/bloc.dart';
+import 'package:promart/src/features/promart/logic/cubit/loading_asset/loading_asset.dart';
+import 'package:promart_api/promart.dart';
 
-import 'package:promart/src/features/promart/presentation/pages/catalog_screen.dart';
-import 'package:promart/src/features/promart/presentation/pages/login_screen.dart';
-import 'package:promart/src/features/promart/presentation/widgets/scroll_behavior.dart';
-
-import 'features/promart/presentation/pages/splash_loading_assets.dart';
+import 'features/promart/view/view.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -30,7 +27,6 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider(
               create: (_) => LoadingAssetSplashCubit()..loadAssets(true)),
-          //TODO:  // BlocProvider(create: (context) => InternetCubit(connectivity: Connectivity())),
           BlocProvider(
             create: (_) => AuthBloc(
               promartRepository: _promartRespository,

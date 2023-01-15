@@ -5,9 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:promart/src/app.dart';
 import 'package:promart/src/bloc_observer.dart';
-import 'package:promart/src/features/promart/data/datasources/remote/remote_datasource.dart';
-import 'package:promart/src/features/promart/data/repositories/promart_repository.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:promart_api/promart.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
